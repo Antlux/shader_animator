@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://ch4jgd1ian2q2"]
+
+[ext_resource type="Shader" path="res://resources/materials/shader_materials/spatial/font_art/font_art.gdshader" id="1_0d01s"]
+[ext_resource type="Texture2D" uid="uid://ch3p07j3d5rbg" path="res://resources/materials/shader_materials/spatial/font_art/PixelOperator8-(w9-h8).png" id="2_ik3wd"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_0d01s")
+shader_parameter/cell_size = Vector2i(9, 8)
+shader_parameter/scale = 1.0
+shader_parameter/font_texture = ExtResource("2_ik3wd")

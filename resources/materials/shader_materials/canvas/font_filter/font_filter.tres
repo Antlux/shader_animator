@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://e60wgyjvttte"]
+
+[ext_resource type="Shader" path="res://resources/materials/shader_materials/canvas/font_filter/font_filter.gdshader" id="1_y25nm"]
+[ext_resource type="Texture2D" uid="uid://dtet12fax0tr4" path="res://assets/font_atlases/QuinqueFive-(5w-6h)-(149H-2V).png" id="2_1dte0"]
+
+[resource]
+shader = ExtResource("1_y25nm")
+shader_parameter/cell_size = Vector2i(5, 5)
+shader_parameter/padding = Vector2i(1, 1)
+shader_parameter/empty_cells = 0
+shader_parameter/scale = 1.0
+shader_parameter/font_texture = ExtResource("2_1dte0")

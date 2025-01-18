@@ -1,0 +1,189 @@
+[gd_scene load_steps=7 format=3 uid="uid://kdnvs0cs0awl"]
+
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
+[ext_resource type="Material" uid="uid://bxxjmxuvx0bv1" path="res://resources/materials/shader_materials/canvas/font_flow/font_flow.tres" id="2_bf8re"]
+[ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
+[ext_resource type="Script" path="res://scenes/render_scene/render_camera.gd" id="3_tkuev"]
+[ext_resource type="Script" path="res://scenes/UI/export_settings_UI.gd" id="4_xgaf4"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_n0rxm"]
+viewport_path = NodePath("RenderSubViewport")
+
+[node name="Main" type="Node" node_paths=PackedStringArray("sub_viewport", "render", "settings_container", "export_button", "file_dialog", "progress_bar")]
+script = ExtResource("1_oq0dg")
+sub_viewport = NodePath("RenderSubViewport")
+render = NodePath("RenderSubViewport/Render")
+settings_container = NodePath("CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer")
+export_button = NodePath("CanvasLayer/MarginContainer/VBoxContainer/Export")
+file_dialog = NodePath("FileDialog")
+progress_bar = NodePath("CanvasLayer/MarginContainer/VBoxContainer/ProgressBar")
+
+[node name="RenderSubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+script = ExtResource("2_hy4vp")
+
+[node name="Render" type="ColorRect" parent="RenderSubViewport"]
+texture_filter = 1
+material = ExtResource("2_bf8re")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("ViewportTexture_n0rxm")
+
+[node name="RenderCamera" type="Camera2D" parent="." node_paths=PackedStringArray("zoom_label")]
+script = ExtResource("3_tkuev")
+zoom_label = NodePath("../CanvasLayer/MarginContainer/Label")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Provide export path"
+initial_position = 1
+size = Vector2i(512, 512)
+access = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="ShaderSettings" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Render Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ExportSettings" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_count_spin_box")]
+layout_mode = 2
+script = ExtResource("4_xgaf4")
+resolution_x_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/ResolutionXSpinBox")
+resolution_y_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/ResolutionYSpinBox")
+duration_spinbox = NodePath("MarginContainer/VBoxContainer/GridContainer/DurationSpinBox")
+frame_count_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/FrameCountSpinBox")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Export Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="ResolutionLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Resolution:"
+
+[node name="ResolutionXSpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+max_value = 16384.0
+
+[node name="Empty" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="ResolutionYSpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+max_value = 16384.0
+
+[node name="DurationLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Duration:"
+
+[node name="DurationSpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.01
+value = 1.0
+suffix = "s"
+
+[node name="FramesLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Frames:"
+
+[node name="FrameCountSpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 9.22337e+18
+step = 0.01
+value = 30.0
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+show_percentage = false
+
+[node name="Export" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Export"
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
