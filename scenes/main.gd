@@ -16,10 +16,9 @@ var current_time := 0.0
 
 func _ready() -> void:
 	setup_settings()
-	progress_bar.min_value = 0
-	progress_bar.max_value = Global.export_settings.duration
 	export_button.pressed.connect(_on_export_pressed)
 	file_dialog.file_selected.connect(_on_file_selected)
+	progress_bar.max_value = 1.0
 
 
 func _process(delta: float) -> void:
@@ -171,6 +170,7 @@ func color_parameter(p_name: String, p_hint: PackedStringArray) -> void:
 
 
 func _on_export_pressed() -> void:
+	file_dialog.root_subfolder
 	file_dialog.show()
 
 func _on_file_selected(file_path: String) -> void:
@@ -178,23 +178,28 @@ func _on_file_selected(file_path: String) -> void:
 	var path := temp[0] + "/"
 	var file_name := temp[1]
 	
+	Global.export_settings.export_path = file_path
+	
 	var duration :=  Global.export_settings.duration
 	var frame_count := Global.export_settings.frame_count
 	
-	var delta := duration / (frame_count)
+	var frame_delay := duration / (frame_count)
 	
 	var captures: Array[Image] = []
 	
 	rendering = true
 	
 	for f in (frame_count):
-		render_material.set_shader_parameter("outside_time", delta * f)
+		render_material.set_shader_parameter("outside_time", frame_delay * f)
 		await get_tree().process_frame
 		await get_tree().process_frame
 		captures.append(sub_viewport.get_texture().get_image())
 	
 	rendering = false
 	
-	for i in captures.size():
-		var export_path = path + file_name + "-%s.png" % i
-		captures[i].save_png(export_path)
+	Global.export(captures)
+	
+	#
+	#for i in captures.size():
+		#var export_path = path + file_name + "-%s.png" % i
+		#captures[i].save_png(export_path)

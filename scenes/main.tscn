@@ -105,13 +105,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ExportSettings" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_count_spin_box")]
+[node name="ExportSettings" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_rate_spin_box", "frame_count_spin_box", "export_type_option_button")]
 layout_mode = 2
 script = ExtResource("4_xgaf4")
 resolution_x_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/ResolutionXSpinBox")
 resolution_y_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/ResolutionYSpinBox")
 duration_spinbox = NodePath("MarginContainer/VBoxContainer/GridContainer/DurationSpinBox")
+frame_rate_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/FrameRateSpinBox")
 frame_count_spin_box = NodePath("MarginContainer/VBoxContainer/GridContainer/FrameCountSpinBox")
+export_type_option_button = NodePath("MarginContainer/VBoxContainer/GridContainer/ExportTypeOptionButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings"]
 custom_minimum_size = Vector2(250, 0)
@@ -163,9 +165,18 @@ step = 0.01
 value = 1.0
 suffix = "s"
 
-[node name="FramesLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+[node name="FrameRateLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Frames:"
+text = "Frame Rate:"
+
+[node name="FrameRateSpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+max_value = 9.22337e+18
+step = 0.01
+
+[node name="FrameCountLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Frame count:"
 
 [node name="FrameCountSpinBox" type="SpinBox" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -173,6 +184,13 @@ size_flags_horizontal = 3
 max_value = 9.22337e+18
 step = 0.01
 value = 30.0
+
+[node name="ExportTypeLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Export type:"
+
+[node name="ExportTypeOptionButton" type="OptionButton" parent="CanvasLayer/MarginContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
 
 [node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 16)
