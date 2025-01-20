@@ -53,8 +53,9 @@ func get_max_zoom_out() -> Vector2:
 
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("zoom_in"):
+		
 		var first = get_local_mouse_position()
-		change_zoom(zoom * Vector2.ONE * 1.2)
+		change_zoom(zoom * (Vector2.ONE * 1.2))
 		var second = get_local_mouse_position()
 		var mouse_delta = second - first
 		
@@ -65,8 +66,9 @@ func _process(delta: float) -> void:
 		position.x = clampf(position.x - mouse_delta.x, min.x, max.x)
 		position.y = clampf(position.y - mouse_delta.y, min.y, max.y)
 	if Input.is_action_just_pressed("zoom_out"):
+		
 		var first = get_local_mouse_position()
-		change_zoom((zoom / Vector2.ONE * 1.2).min(get_max_zoom_out()))
+		change_zoom((zoom / (Vector2.ONE * 1.2)).max(get_max_zoom_out()))
 		var second = get_local_mouse_position()
 		var mouse_delta = second - first
 		
