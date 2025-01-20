@@ -58,4 +58,3 @@ void fragment() {
 		COLOR.rgb = vec3(0.0);
 	}
 }
-

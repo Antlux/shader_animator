@@ -80,7 +80,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Render Settings"
+text = "Shader Settings"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
