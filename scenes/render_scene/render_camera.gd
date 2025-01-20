@@ -48,7 +48,7 @@ func _input(event: InputEvent) -> void:
 func get_max_zoom_out() -> Vector2:
 	var ratio := (Vector2(Global.export_settings.resolution) * 1.1) / (self.get_viewport_rect().size / zoom)
 	var f = maxf(ratio.x, ratio.y)
-	return zoom / f
+	return (zoom / f)
 
 
 func _process(delta: float) -> void:

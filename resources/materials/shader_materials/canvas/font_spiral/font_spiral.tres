@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://puav3np8tmmb"]
+
+[ext_resource type="Shader" path="res://resources/materials/shader_materials/canvas/font_spiral/font_spiral.gdshader" id="1_31f5f"]
+[ext_resource type="Texture2D" uid="uid://dtet12fax0tr4" path="res://assets/font_atlases/QuinqueFive-(5w-6h)-(149H-2V).png" id="2_chso6"]
+
+[resource]
+shader = ExtResource("1_31f5f")
+shader_parameter/outside_time = 0.0
+shader_parameter/speed = 1.0
+shader_parameter/frequency = 4.0
+shader_parameter/foreground_color = Color(1, 1, 1, 1)
+shader_parameter/background_color = Color(0, 0, 0, 1)
+shader_parameter/empty_cells = 0
+shader_parameter/cell_size = Vector2i(5, 6)
+shader_parameter/cell_offset = Vector2i(0, 0)
+shader_parameter/padding = Vector2i(1, 0)
+shader_parameter/scale = 1.0
+shader_parameter/font_texture = ExtResource("2_chso6")
