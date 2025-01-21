@@ -57,7 +57,7 @@ void fragment() {
 	//float f_speed = round(outside_time * framerate * speed) / framerate;
 	float f_speed = outside_time * speed;
 	float offset = texture(offset_texture, cell_uv).x * offset_factor;
-	
+
 	float cell_lum = fract(pow(distance(0.0, cell_uv.y), 1.0 )* density - f_speed + offset);
 	cell_lum = texture(shape_curve, vec2(cell_lum)).x;
 

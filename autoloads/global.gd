@@ -1,8 +1,5 @@
 extends Node
 
-const GIFExporter = preload("res://addons/gdgifexporter/exporter.gd")
-const MedianCutQuantization = preload("res://addons/gdgifexporter/quantization/median_cut.gd")
-
 @onready var export_settings := ExportSettings.load_or_create()
 
 
@@ -31,22 +28,47 @@ func export(captures: Array[Image]) -> void:
 				var error := capture.save_png(Global.export_settings.export_path + "-%s.png" % idx)
 				assert(error == OK, "Could not save as png")
 		ExportSettings.ExportType.WEBP:
-			for idx in captures.size():
-				var capture := captures[idx]
-				var error := capture.save_webp(Global.export_settings.export_path + "-%s.webp" % idx)
-				assert(error == OK, "Could not save as webp")
+			export_webp(captures)
 		ExportSettings.ExportType.GIF:
 			export_gif(captures)
 
 
-func export_gif(captures: Array[Image]) -> void:
+#func export_gif(captures: Array[Image]) -> void:
+	#var frame_delay := export_settings.duration / export_settings.frame_count
+	#var exporter := GIFExporter.new(export_settings.resolution.x, export_settings.resolution.y)
+	#
+	#for capture in captures:
+		#capture.convert(Image.FORMAT_RGBA8)
+		#exporter.add_frame(capture, frame_delay, MedianCutQuantization)
+	#
+	#var file := FileAccess.open(export_settings.export_path + ".gif", FileAccess.WRITE)
+	#file.store_buffer(exporter.export_file_data())
+	#file.close()
+	#
+
+func export_webp(captures: Array[Image]) -> void:
 	var frame_delay := export_settings.duration / export_settings.frame_count
-	var exporter := GIFExporter.new(export_settings.resolution.x, export_settings.resolution.y)
 	
+	var array : Array[PackedByteArray] = []
 	for capture in captures:
 		capture.convert(Image.FORMAT_RGBA8)
-		exporter.add_frame(capture, frame_delay, MedianCutQuantization)
+		array.append(capture.get_data())
+	var width := export_settings.resolution.x
+	var height := export_settings.resolution.y
+	var path := export_settings.export_path + ".webp"
 	
-	var file := FileAccess.open(export_settings.export_path + ".gif", FileAccess.WRITE)
-	file.store_buffer(exporter.export_file_data())
-	file.close()
+	AnimationExporter.export_webp(path, width, height, frame_delay, array)
+
+
+func export_gif(captures: Array[Image]) -> void:
+	var frame_delay := export_settings.duration / export_settings.frame_count
+	
+	var array : Array[PackedByteArray] = []
+	for capture in captures:
+		capture.convert(Image.FORMAT_RGBA8)
+		array.append(capture.get_data())
+	var width := export_settings.resolution.x
+	var height := export_settings.resolution.y
+	var path := export_settings.export_path + ".gif"
+	
+	AnimationExporter.export_gif(path, width, height, frame_delay, array)

@@ -61,7 +61,7 @@ void fragment() {
 	vec2 cell_uv_offset = get_cell_uv(uv_offset, screen_size);
 
 	float f_speed = outside_time * speed;
-	
+
 	float cell_lum = draw_spiral(cell_uv, outside_time * speed * TAU);
 
 	float font_mask = get_font_color(cell_uv_offset, cell_relative_uv_offset, cell_lum).x;
