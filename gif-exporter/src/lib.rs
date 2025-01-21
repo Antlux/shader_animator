@@ -42,6 +42,7 @@ impl AnimationExporter {
                         pixels.as_mut_slice()
                     );
                     frame.delay = (delay * 100.0) as u16;
+                    frame.dispose = gif::DisposalMethod::Background;
                     encoder.write_frame(&frame).unwrap()
                 }
             }
