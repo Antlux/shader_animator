@@ -6,35 +6,23 @@ extends Node
 
 @export var export_button : Button
 @export var file_dialog: FileDialog
-@export var progress_bar: ProgressBar
 
-@onready var render_material: ShaderMaterial = render.material as ShaderMaterial
 
 var rendering: bool = false
 
 var current_time := 0.0
 
 func _ready() -> void:
-	setup_settings()
+	Global.render_material_changed.connect(_on_render_material_changed)
 	export_button.pressed.connect(_on_export_pressed)
 	file_dialog.file_selected.connect(_on_file_selected)
-	progress_bar.max_value = 1.0
 
 
-func _process(delta: float) -> void:
-	
-	var duration := Global.export_settings.duration
-	var frame_count := Global.export_settings.frame_count
-	
-	if not rendering:
-		current_time = fmod(current_time + delta, duration)
-		var frame_rate = frame_count / duration;
-		var value = floor(current_time * frame_rate) /  frame_rate
-		progress_bar.value = value / duration
-		render_material.set_shader_parameter("outside_time", value)
 
 
-func setup_settings() -> void:
+
+
+func setup_shader_settings(render_material: ShaderMaterial) -> void:
 	for c in settings_container.get_children():
 		c.queue_free()
 	
@@ -60,17 +48,17 @@ func setup_settings() -> void:
 			TYPE_BOOL:
 				pass
 			TYPE_INT:
-				int_parameter(p_name, p_hint)
+				int_parameter(render_material, p_name, p_hint)
 			TYPE_FLOAT:
-				float_parameter(p_name, p_hint)
+				float_parameter(render_material, p_name, p_hint)
 			TYPE_VECTOR2:
-				vector2_parameter(p_name, p_hint)
+				vector2_parameter(render_material, p_name, p_hint)
 			TYPE_VECTOR2I:
-				vector2i_parameter(p_name, p_hint)
+				vector2i_parameter(render_material, p_name, p_hint)
 			TYPE_COLOR:
-				color_parameter(p_name, p_hint)
+				color_parameter(render_material, p_name, p_hint)
 
-func int_parameter(p_name: String, hint : PackedStringArray) -> void:
+func int_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	var p_label = Label.new()
 	var p_spinbox = SpinBox.new()
 	
@@ -90,7 +78,7 @@ func int_parameter(p_name: String, hint : PackedStringArray) -> void:
 		render_material.set_shader_parameter(p_name, value)
 		)
 
-func float_parameter(p_name: String, hint : PackedStringArray) -> void:
+func float_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	var p_label = Label.new()
 	var p_spinbox = SpinBox.new()
 	
@@ -108,7 +96,7 @@ func float_parameter(p_name: String, hint : PackedStringArray) -> void:
 		render_material.set_shader_parameter(p_name, value)
 		)
 
-func vector2_parameter(p_name: String, hint : PackedStringArray) -> void:
+func vector2_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	var p_label := Label.new()
 	var p_x_spinbox := SpinBox.new()
 	var p_y_spinbox := SpinBox.new()
@@ -132,7 +120,7 @@ func vector2_parameter(p_name: String, hint : PackedStringArray) -> void:
 		render_material.set_shader_parameter(p_name, v)
 		)
 
-func vector2i_parameter(p_name: String, hint : PackedStringArray) -> void:
+func vector2i_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	var p_label := Label.new()
 	var p_x_spinbox := SpinBox.new()
 	var p_y_spinbox := SpinBox.new()
@@ -156,7 +144,7 @@ func vector2i_parameter(p_name: String, hint : PackedStringArray) -> void:
 		render_material.set_shader_parameter(p_name, v)
 		)
 
-func color_parameter(p_name: String, p_hint: PackedStringArray) -> void:
+func color_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	var p_label := Label.new()
 	var p_color_picker_button := ColorPickerButton.new()
 	p_label.text = p_name
@@ -168,6 +156,9 @@ func color_parameter(p_name: String, p_hint: PackedStringArray) -> void:
 	settings_container.add_child(p_label)
 	settings_container.add_child(p_color_picker_button)
 
+
+func _on_render_material_changed(render_material: ShaderMaterial) -> void:
+	setup_shader_settings(render_material)
 
 func _on_export_pressed() -> void:
 	file_dialog.root_subfolder
@@ -187,15 +178,15 @@ func _on_file_selected(file_path: String) -> void:
 	
 	var captures: Array[Image] = []
 	
-	rendering = true
+	Global.rendering = true
 	
 	for f in (frame_count):
-		render_material.set_shader_parameter("outside_time", frame_delay * f)
+		Global.render_material.set_shader_parameter("outside_time", frame_delay * f)
 		await get_tree().process_frame
 		await get_tree().process_frame
 		captures.append(sub_viewport.get_texture().get_image())
 	
-	rendering = false
+	Global.rendering = false
 	
 	Global.export(captures)
 	
