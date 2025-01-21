@@ -64,7 +64,8 @@ func export_webp(captures: Array[Image]) -> void:
 	var height := export_settings.resolution.y
 	var path := export_settings.export_path + ".webp"
 	
-	AnimationExporter.export_webp(path, width, height, frame_delay, array)
+	var error := AnimationExporter.export_webp(path, width, height, frame_delay, array) as Error
+	assert(error == OK, "Webp export failed with code: %s" % error)
 
 func export_gif(captures: Array[Image]) -> void:
 	var frame_delay := export_settings.duration / export_settings.frame_count
@@ -77,8 +78,8 @@ func export_gif(captures: Array[Image]) -> void:
 	var height := export_settings.resolution.y
 	var path := export_settings.export_path + ".gif"
 	
-	AnimationExporter.export_gif(path, width, height, frame_delay, array)
-
+	var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
+	assert(error == OK, "GIF export failed with code: %s" % error)
 
 func _on_export_settings_changed() -> void:
 	export_settings.save()

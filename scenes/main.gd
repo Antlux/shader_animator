@@ -8,10 +8,6 @@ extends Node
 @export var file_dialog: FileDialog
 
 
-var rendering: bool = false
-
-var current_time := 0.0
-
 func _ready() -> void:
 	export_button.pressed.connect(_on_export_pressed)
 	file_dialog.file_selected.connect(_on_file_selected)
@@ -24,7 +20,7 @@ func _on_export_pressed() -> void:
 func _on_file_selected(file_path: String) -> void:
 	var temp := file_path.rsplit("/", true, 1)
 	var path := temp[0] + "/"
-	var file_name := temp[1]
+	var directory := temp[1]
 	
 	Global.export_settings.export_path = file_path
 	
@@ -46,4 +42,4 @@ func _on_file_selected(file_path: String) -> void:
 	Global.rendering = false
 	
 	Global.export(captures)
-	
+	var tet = OK
