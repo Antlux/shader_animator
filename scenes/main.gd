@@ -14,7 +14,7 @@ func _ready() -> void:
 
 
 func _on_export_pressed() -> void:
-	file_dialog.root_subfolder
+	file_dialog.current_dir = Global.export_settings.export_path.rsplit("/", false, 1)[0]
 	file_dialog.show()
 
 func _on_file_selected(file_path: String) -> void:
