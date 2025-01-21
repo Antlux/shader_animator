@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=14 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -11,6 +11,7 @@
 [ext_resource type="Resource" uid="uid://c8pq1qkpqp2mp" path="res://resources/custom/ShaderFace/shader_faces/font_flow.tres" id="7_tyxha"]
 [ext_resource type="Resource" uid="uid://b1y5k64al6qk2" path="res://resources/custom/ShaderFace/shader_faces/font_drip.tres" id="8_sce85"]
 [ext_resource type="Resource" uid="uid://71isyh7ocgh8" path="res://resources/custom/ShaderFace/shader_faces/font_spiral.tres" id="9_auy6p"]
+[ext_resource type="Script" path="res://scenes/UI/shader_settings_UI.gd" id="11_r3m6x"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_n0rxm"]
 viewport_path = NodePath("RenderSubViewport")
@@ -74,9 +75,11 @@ layout_mode = 2
 script = ExtResource("5_0enrd")
 shader_faces = Array[ExtResource("6_yw3m7")]([ExtResource("7_tyxha"), ExtResource("8_sce85"), ExtResource("9_auy6p")])
 
-[node name="ShaderSettings" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+[node name="ShaderSettings" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("settings_container")]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("11_r3m6x")
+settings_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/ShaderSettings"]
 layout_mode = 2
