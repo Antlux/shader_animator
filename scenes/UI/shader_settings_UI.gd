@@ -7,6 +7,7 @@ func _ready() -> void:
 
 
 func update_shader_settings_UI(render_material: ShaderMaterial) -> void:
+	print("t")
 	for c in settings_container.get_children():
 		c.queue_free()
 	
@@ -32,9 +33,6 @@ func update_shader_settings_UI(render_material: ShaderMaterial) -> void:
 			TYPE_COLOR:
 				add_color_parameter(render_material, p_name, p_hint)
 
-func _on_render_material_changed(render_material: ShaderMaterial) -> void:
-	update_shader_settings_UI(render_material)
- 
 func add_parameter_label(p_name: String) -> void:
 	var p_label := Label.new()
 	p_label.text = p_name
@@ -136,3 +134,7 @@ func add_color_parameter(render_material: ShaderMaterial, p_name: String, hint :
 			)
 	p_color_picker_button.custom_minimum_size.y = 20.0
 	settings_container.add_child(p_color_picker_button)
+
+
+func _on_render_material_changed(render_material: ShaderMaterial) -> void:
+	update_shader_settings_UI(render_material)

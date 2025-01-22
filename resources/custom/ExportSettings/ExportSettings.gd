@@ -8,7 +8,6 @@ enum ExportType {
 	PNG,
 	WEBP,
 	GIF,
-	SPRITESHEET,
 }
 
 @export var export_type := ExportType.PNG: 

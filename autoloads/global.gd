@@ -1,5 +1,6 @@
 extends Node
 
+
 signal render_material_changed(mat: ShaderMaterial)
 
 @onready var export_settings := ExportSettings.load_or_create()
@@ -80,6 +81,7 @@ func export_gif(captures: Array[Image]) -> void:
 	
 	var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
 	assert(error == OK, "GIF export failed with code: %s" % error)
+
 
 func _on_export_settings_changed() -> void:
 	export_settings.save()
