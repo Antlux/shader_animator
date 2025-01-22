@@ -14,9 +14,6 @@ struct AnimationExporter {}
 
 impl GodotDefault for AnimationExporter {}
 
-
-
-
 #[godot_api]
 impl AnimationExporter {
     #[func]

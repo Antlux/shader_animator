@@ -1,10 +1,9 @@
 extends Camera2D
 
-@export var zoom_label: Label
-
 
 func _ready() -> void:
 	zoom = get_max_zoom_out()
+	offset = Global.export_settings.resolution / 2.0
 	Global.export_settings.changed.connect(_on_export_settings_changed)
 	self.get_viewport().size_changed.connect(_on_size_changed)
 	change_zoom(zoom)
@@ -12,7 +11,6 @@ func _ready() -> void:
 
 func change_zoom(new_zoom: Vector2):
 	zoom = new_zoom
-	zoom_label.text = "ZOOM/SCALE = (%.2f %.2f)" % [zoom.x, zoom.y]
 
 
 func get_limit_rect() -> Rect2:
@@ -100,3 +98,5 @@ func _on_export_settings_changed() -> void:
 	
 	position.x = clampf(position.x, min.x, max.x)
 	position.y = clampf(position.y, min.y, max.y)
+	
+	offset = Global.export_settings.resolution / 2.0

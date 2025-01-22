@@ -94,7 +94,7 @@ func add_vector2_parameter(render_material: ShaderMaterial, p_name: String, hint
 	p_x_spinbox.prefix = "x:"
 	p_y_spinbox.prefix = "y:"
 	settings_container.add_child(p_x_spinbox)
-	#settings_container.add_child(Control.new())
+	settings_container.add_child(Control.new())
 	settings_container.add_child(p_y_spinbox)
 	p_x_spinbox.value_changed.connect(func(value: float):
 		var v = Vector2(value, render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0)
@@ -116,7 +116,7 @@ func add_vector2i_parameter(render_material: ShaderMaterial, p_name: String, hin
 	p_x_spinbox.prefix = "x:"
 	p_y_spinbox.prefix = "y:"
 	settings_container.add_child(p_x_spinbox)
-	#settings_container.add_child(Control.new())
+	settings_container.add_child(Control.new())
 	settings_container.add_child(p_y_spinbox)
 	p_x_spinbox.value_changed.connect(func(value: float):
 		var v = Vector2(value, render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0)

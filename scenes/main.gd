@@ -2,14 +2,13 @@ extends Node
 
 @export var sub_viewport: SubViewport
 @export var render: ColorRect
-@export var settings_container: Control
 
 @export var export_button : Button
 @export var file_dialog: FileDialog
 
 
 func _ready() -> void:
-	export_button.pressed.connect(_on_export_pressed)
+	#export_button.pressed.connect(_on_export_pressed)
 	file_dialog.file_selected.connect(_on_file_selected)
 
 
