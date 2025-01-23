@@ -1,7 +1,7 @@
 extends Node
 
-
 signal render_material_changed(mat: ShaderMaterial)
+signal render_material_updated(timestamp: float)
 
 @onready var export_settings := ExportSettings.load_or_create()
 
@@ -29,7 +29,12 @@ func _process(delta: float) -> void:
 		current_time = fmod(current_time + delta, duration)
 		var frame_rate = frame_count / duration;
 		var value = floor(current_time * frame_rate) /  frame_rate
-		render_material.set_shader_parameter("outside_time", value)
+		update_render_material(value)
+
+
+func update_render_material(timestamp: float) -> void:
+	render_material.set_shader_parameter("outside_time", timestamp)
+	render_material_updated.emit(timestamp)
 
 
 func export(captures: Array[Image]) -> void:
