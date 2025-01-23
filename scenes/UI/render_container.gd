@@ -1,5 +1,7 @@
 extends SubViewportContainer
 
+signal camera_zoom_changed
+
 @export var camera: Camera2D
 
 
@@ -13,6 +15,7 @@ func _ready() -> void:
 
 func change_zoom(new_zoom: Vector2):
 	camera.zoom = new_zoom
+	camera_zoom_changed.emit()
 
 
 func get_limit_rect() -> Rect2:
@@ -86,7 +89,7 @@ func _process(delta: float) -> void:
 func get_max_zoom_out() -> Vector2:
 	var ratio := (Vector2(Global.export_settings.resolution) * 1.1) / (camera.get_viewport_rect().size / camera.zoom)
 	var f = maxf(ratio.x, ratio.y)
-	return (camera.zoom / f)
+	return (camera.zoom / f).min(Vector2.ONE)
 
 
 func _on_size_changed() -> void:

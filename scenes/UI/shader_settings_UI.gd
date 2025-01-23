@@ -7,11 +7,11 @@ func _ready() -> void:
 
 
 func update_shader_settings_UI(render_material: ShaderMaterial) -> void:
-	print("t")
 	for c in settings_container.get_children():
 		c.queue_free()
 	
 	for p: Dictionary in render_material.shader.get_shader_uniform_list():
+		print(p)
 		var p_name: String = p["name"]
 		var p_type: Variant.Type = p["type"]
 		var p_hint := (p["hint_string"] as String).split(",")
@@ -32,6 +32,10 @@ func update_shader_settings_UI(render_material: ShaderMaterial) -> void:
 				add_vector2i_parameter(render_material, p_name, p_hint)
 			TYPE_COLOR:
 				add_color_parameter(render_material, p_name, p_hint)
+			TYPE_OBJECT:
+				match p_hint[0]:
+					"Texture2D":
+						add_texture_parameter(render_material, p_name)
 
 func add_parameter_label(p_name: String) -> void:
 	var p_label := Label.new()
@@ -135,6 +139,17 @@ func add_color_parameter(render_material: ShaderMaterial, p_name: String, hint :
 	p_color_picker_button.custom_minimum_size.y = 20.0
 	settings_container.add_child(p_color_picker_button)
 
+func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> void:
+	add_parameter_label(p_name)
+	var p_texture_button := TextureButton.new()
+	p_texture_button.ignore_texture_size = true
+	p_texture_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	p_texture_button.texture_normal = render_material.get_shader_parameter(p_name)
+	p_texture_button.custom_minimum_size.y = 64.0
+	settings_container.add_child(p_texture_button)
+	
+	var texture_file_dialog := FileDialog.new()
+	texture_file_dialog.mode
 
 func _on_render_material_changed(render_material: ShaderMaterial) -> void:
 	update_shader_settings_UI(render_material)

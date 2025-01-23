@@ -1,5 +1,7 @@
 extends CodeEdit
 
+var auto_update := true
+
 
 func _ready() -> void:
 	Global.render_material_changed.connect(_on_render_material_changed)

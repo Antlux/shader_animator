@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=20 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -7,8 +7,10 @@
 [ext_resource type="Script" path="res://scenes/UI/shader_option_button.gd" id="5_0enrd"]
 [ext_resource type="Script" path="res://scenes/UI/render_container.gd" id="5_yals7"]
 [ext_resource type="CodeHighlighter" uid="uid://ciiy0hk5yynkd" path="res://resources/shader_code_highlighter.tres" id="6_b7fne"]
+[ext_resource type="Script" path="res://scenes/UI/zoom_label.gd" id="6_d8rb6"]
 [ext_resource type="Script" path="res://scenes/UI/shader_code_edit.gd" id="6_yayyj"]
 [ext_resource type="Script" path="res://resources/custom/ShaderFace/ShaderFace.gd" id="6_yw3m7"]
+[ext_resource type="Script" path="res://scenes/UI/render_progress_bar.gd" id="7_6g34h"]
 [ext_resource type="Resource" uid="uid://c8pq1qkpqp2mp" path="res://resources/custom/ShaderFace/shader_faces/font_flow.tres" id="7_tyxha"]
 [ext_resource type="Resource" uid="uid://b1y5k64al6qk2" path="res://resources/custom/ShaderFace/shader_faces/font_drip.tres" id="8_sce85"]
 [ext_resource type="Resource" uid="uid://71isyh7ocgh8" path="res://resources/custom/ShaderFace/shader_faces/font_spiral.tres" id="9_auy6p"]
@@ -17,6 +19,12 @@
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_n0rxm"]
 viewport_path = NodePath("RenderSubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xldfy"]
+bg_color = Color(0, 0, 0, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oawjl"]
+bg_color = Color(0, 1, 0.0666666, 1)
 
 [node name="Main" type="Node" node_paths=PackedStringArray("sub_viewport", "render", "export_button", "file_dialog")]
 script = ExtResource("1_oq0dg")
@@ -75,33 +83,71 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="HSplitContainer" type="HSplitContainer" parent="UI/ColorRect/MarginContainer/GridContainer"]
+[node name="VSplitContainer" type="VSplitContainer" parent="UI/ColorRect/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 split_offset = -215
 
-[node name="RenderContainer" type="SubViewportContainer" parent="UI/ColorRect/MarginContainer/GridContainer/HSplitContainer" node_paths=PackedStringArray("camera")]
-texture_filter = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RenderContainer" type="SubViewportContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control" node_paths=PackedStringArray("camera")]
+texture_filter = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
 script = ExtResource("5_yals7")
 camera = NodePath("SubViewport/RenderCamera")
 
-[node name="SubViewport" type="SubViewport" parent="UI/ColorRect/MarginContainer/GridContainer/HSplitContainer/RenderContainer"]
+[node name="SubViewport" type="SubViewport" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer"]
 handle_input_locally = false
-size = Vector2i(703, 632)
+size = Vector2i(930, 397)
 render_target_update_mode = 4
 
-[node name="RenderSprite" type="Sprite2D" parent="UI/ColorRect/MarginContainer/GridContainer/HSplitContainer/RenderContainer/SubViewport"]
+[node name="RenderSprite" type="Sprite2D" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer/SubViewport"]
 texture_filter = 1
 texture = SubResource("ViewportTexture_n0rxm")
 centered = false
 
-[node name="RenderCamera" type="Camera2D" parent="UI/ColorRect/MarginContainer/GridContainer/HSplitContainer/RenderContainer/SubViewport"]
+[node name="RenderCamera" type="Camera2D" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer/SubViewport"]
 
-[node name="CodeEdit" type="CodeEdit" parent="UI/ColorRect/MarginContainer/GridContainer/HSplitContainer"]
+[node name="ZoomLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control" node_paths=PackedStringArray("render_container")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("6_d8rb6")
+render_container = NodePath("../RenderContainer")
+
+[node name="RenderProgressBar" type="ProgressBar" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_xldfy")
+theme_override_styles/fill = SubResource("StyleBoxFlat_oawjl")
+max_value = 1.0
+step = 0.001
+show_percentage = false
+script = ExtResource("7_6g34h")
+
+[node name="CodeEdit" type="CodeEdit" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer"]
 layout_mode = 2
 scroll_smooth = true
 syntax_highlighter = ExtResource("6_b7fne")

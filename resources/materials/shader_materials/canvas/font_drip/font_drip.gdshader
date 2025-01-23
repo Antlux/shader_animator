@@ -55,6 +55,7 @@ void fragment() {
 
 	float f_speed = outside_time * speed;
 	float cell_lum = fract(pow(distance(vec2(pos -.5 * vec2(cell_size) * scale * SCREEN_PIXEL_SIZE), cell_uv), shape) * density - f_speed);
+	cell_lum *= pow(distance(vec2(0.5), cell_uv_offset) * sqrt(2.0), 1.0 - shape);
 
 	float font_mask = get_font_color(cell_uv_offset, cell_relative_uv_offset, cell_lum).x;
 

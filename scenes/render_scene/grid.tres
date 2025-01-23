@@ -4,8 +4,9 @@
 
 [resource]
 shader = ExtResource("1_lrjq7")
+shader_parameter/texture_size = Vector2(2048, 2048)
 shader_parameter/cell_color = Color(0.182902, 0.242311, 0.289562, 1)
 shader_parameter/line_color = Color(0.310923, 0.295009, 0.427595, 1)
-shader_parameter/cell_size = Vector2(16, 16)
+shader_parameter/cell_size = Vector2(8, 8)
 shader_parameter/line_width = 2.0
 shader_parameter/offset = Vector2(0, 0)

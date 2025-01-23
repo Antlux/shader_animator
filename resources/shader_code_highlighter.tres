@@ -1,3 +1,12 @@
 [gd_resource type="CodeHighlighter" format=3 uid="uid://ciiy0hk5yynkd"]
 
 [resource]
+number_color = Color(1, 0.953333, 0.72, 1)
+symbol_color = Color(1, 1, 1, 1)
+function_color = Color(0, 0.462333, 0.73, 1)
+member_variable_color = Color(1, 1, 1, 1)
+keyword_colors = {
+"float": Color(1, 0, 0, 1),
+"uniform": Color(1, 0, 0, 1),
+"vec2": Color(1, 0, 0, 1)
+}
