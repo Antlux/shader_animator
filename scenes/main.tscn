@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=21 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -6,7 +6,8 @@
 [ext_resource type="Script" path="res://scenes/render_scene/render_rect.gd" id="4_7htye"]
 [ext_resource type="Script" path="res://scenes/UI/shader_option_button.gd" id="5_0enrd"]
 [ext_resource type="Script" path="res://scenes/UI/render_container.gd" id="5_yals7"]
-[ext_resource type="CodeHighlighter" uid="uid://ciiy0hk5yynkd" path="res://resources/shader_code_highlighter.tres" id="6_b7fne"]
+[ext_resource type="PackedScene" uid="uid://bvk2hghw2ws4u" path="res://scenes/UI/grid/grid.tscn" id="6_akf6h"]
+[ext_resource type="CodeHighlighter" uid="uid://ciiy0hk5yynkd" path="res://resources/shader_code_highlighter_bck.tres" id="6_b7fne"]
 [ext_resource type="Script" path="res://scenes/UI/zoom_label.gd" id="6_d8rb6"]
 [ext_resource type="Script" path="res://scenes/UI/shader_code_edit.gd" id="6_yayyj"]
 [ext_resource type="Script" path="res://resources/custom/ShaderFace/ShaderFace.gd" id="6_yw3m7"]
@@ -17,7 +18,7 @@
 [ext_resource type="Script" path="res://scenes/UI/shader_settings_UI.gd" id="11_r3m6x"]
 [ext_resource type="Script" path="res://scenes/UI/render_settings_UI.gd" id="13_owcuf"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_n0rxm"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_af6fd"]
 viewport_path = NodePath("RenderSubViewport")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xldfy"]
@@ -116,26 +117,51 @@ handle_input_locally = false
 size = Vector2i(930, 397)
 render_target_update_mode = 4
 
-[node name="RenderSprite" type="Sprite2D" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer/SubViewport"]
-texture_filter = 1
-texture = SubResource("ViewportTexture_n0rxm")
-centered = false
-
 [node name="RenderCamera" type="Camera2D" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer/SubViewport"]
 
-[node name="ZoomLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control" node_paths=PackedStringArray("render_container")]
+[node name="TextureRect" type="TextureRect" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer/SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_af6fd")
+
+[node name="Grid" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderContainer/SubViewport" node_paths=PackedStringArray("camera") instance=ExtResource("6_akf6h")]
+camera = NodePath("../RenderCamera")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control"]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -40.0
-offset_top = -23.0
-grow_horizontal = 0
-grow_vertical = 0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="MenuButton" type="MenuButton" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "View"
+flat = false
+item_count = 1
+popup/item_0/text = "Grid"
+popup/item_0/checkable = 2
+
+[node name="ZoomLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/MarginContainer/HBoxContainer" node_paths=PackedStringArray("render_container")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+vertical_alignment = 1
 script = ExtResource("6_d8rb6")
-render_container = NodePath("../RenderContainer")
+render_container = NodePath("../../../RenderContainer")
 
 [node name="RenderProgressBar" type="ProgressBar" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)
@@ -161,6 +187,11 @@ script = ExtResource("6_yayyj")
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="ShaderOptionButton" type="OptionButton" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("5_0enrd")
+shader_faces = Array[ExtResource("6_yw3m7")]([ExtResource("8_sce85"), ExtResource("7_tyxha"), ExtResource("9_auy6p")])
+
 [node name="ShaderSettings" type="PanelContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("settings_container")]
 layout_mode = 2
 size_flags_vertical = 3
@@ -175,14 +206,6 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ShaderSettings/MarginContainer"]
-layout_mode = 2
-
-[node name="ShaderOptionButton" type="OptionButton" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
-layout_mode = 2
-script = ExtResource("5_0enrd")
-shader_faces = Array[ExtResource("6_yw3m7")]([ExtResource("8_sce85"), ExtResource("7_tyxha"), ExtResource("9_auy6p")])
-
-[node name="HSeparator" type="HSeparator" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer"]

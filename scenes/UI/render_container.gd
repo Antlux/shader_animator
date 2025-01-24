@@ -29,28 +29,27 @@ func get_limit_rect() -> Rect2:
 	
 	var aspect_ratio = Vector2(maxf(rect.size.x / rect.size.y, 1.0), maxf(rect.size.y / rect.size.x, 1.0))
 	
-	var min = vmin / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) + half
-	var max = vmax / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) - half
+	var rect_min = vmin / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) + half
+	var rect_max = vmax / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) - half
 	
-	return Rect2(min.min(max), min.max(max))
+	return Rect2(rect_min.min(rect_max), rect_min.max(rect_max))
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_action_pressed("pan"):
 			
 			var limit_rect := get_limit_rect()
-			var min := limit_rect.position
-			var max := limit_rect.size
+			var rect_min := limit_rect.position
+			var rect_max := limit_rect.size
 			
 			var input := Vector2(event.relative) / camera.zoom
 			
 			camera.position.x = camera.position.x - input.x
 			camera.position.y = camera.position.y - input.y
-			camera.position.x = clamp(camera.position.x, min.x , max.x)
-			camera.position.y = clamp(camera.position.y, min.y, max.y)
 
 
-func _process(delta: float) -> void:
+
+func _process(_delta: float) -> void:
 	if not get_rect().has_point(get_local_mouse_position()):
 		return
 	
@@ -61,13 +60,11 @@ func _process(delta: float) -> void:
 		var mouse_delta = second - first
 		
 		var limit_rect := get_limit_rect()
-		var min := limit_rect.position
-		var max := limit_rect.size
+		var rect_min := limit_rect.position
+		var rect_max := limit_rect.size
 		
-		camera.position.x = clamp(camera.position.x - mouse_delta.x, min.x , max.x)
-		camera.position.y = clamp(camera.position.y - mouse_delta.y, min.y, max.y)
-		camera.position.x = clamp(camera.position.x, min.x , max.x)
-		camera.position.y = clamp(camera.position.y, min.y, max.y)
+		camera.position.x = camera.position.x - mouse_delta.x
+		camera.position.y = camera.position.y - mouse_delta.y
 		
 	if Input.is_action_just_pressed("zoom_out"):
 		
@@ -76,14 +73,9 @@ func _process(delta: float) -> void:
 		var second = get_local_mouse_position()
 		var mouse_delta = second - first
 		
-		var limit_rect := get_limit_rect()
-		var min := limit_rect.position
-		var max := limit_rect.size
-		
-		camera.position.x = clamp(camera.position.x - mouse_delta.x, min.x , max.x)
-		camera.position.y = clamp(camera.position.y - mouse_delta.y, min.y, max.y)
-		camera.position.x = clamp(camera.position.x, min.x , max.x)
-		camera.position.y = clamp(camera.position.y, min.y, max.y)
+		camera.position.x = camera.position.x - mouse_delta.x
+		camera.position.y = camera.position.y - mouse_delta.y
+
 
 
 func get_max_zoom_out() -> Vector2:
@@ -95,23 +87,10 @@ func get_max_zoom_out() -> Vector2:
 func _on_size_changed() -> void:
 	await get_tree().process_frame
 	change_zoom(camera.zoom.max(get_max_zoom_out()))
-	
-	var limit_rect := get_limit_rect()
-	var min := limit_rect.position
-	var max := limit_rect.size
-	
-	camera.position.x = clamp(camera.position.x, min.x , max.x)
-	camera.position.y = clamp(camera.position.y, min.y, max.y)
+
 
 
 func _on_export_settings_changed() -> void:
 	change_zoom(camera.zoom.max(get_max_zoom_out()))
-	
-	var limit_rect := get_limit_rect()
-	var min := limit_rect.position
-	var max := limit_rect.size
-	
-	position.x = clampf(position.x, min.x, max.x)
-	position.y = clampf(position.y, min.y, max.y)
 	
 	camera.offset = Global.export_settings.resolution / 2.0

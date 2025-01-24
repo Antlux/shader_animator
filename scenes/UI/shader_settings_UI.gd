@@ -21,17 +21,17 @@ func update_shader_settings_UI(render_material: ShaderMaterial) -> void:
 			
 		match p_type:
 			TYPE_BOOL:
-				add_bool_parameter(render_material, p_name, p_hint)
+				add_bool_parameter(render_material, p_name)
 			TYPE_INT:
 				add_int_parameter(render_material, p_name, p_hint)
 			TYPE_FLOAT:
 				add_float_parameter(render_material, p_name, p_hint)
 			TYPE_VECTOR2:
-				add_vector2_parameter(render_material, p_name, p_hint)
+				add_vector2_parameter(render_material, p_name)
 			TYPE_VECTOR2I:
-				add_vector2i_parameter(render_material, p_name, p_hint)
+				add_vector2i_parameter(render_material, p_name)
 			TYPE_COLOR:
-				add_color_parameter(render_material, p_name, p_hint)
+				add_color_parameter(render_material, p_name)
 			TYPE_OBJECT:
 				match p_hint[0]:
 					"Texture2D":
@@ -42,7 +42,7 @@ func add_parameter_label(p_name: String) -> void:
 	p_label.text = p_name
 	settings_container.add_child(p_label)
 
-func add_bool_parameter(render_material: ShaderMaterial, p_name: String, hint: PackedStringArray) -> void:
+func add_bool_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
 	
 	var p_checkbox := CheckBox.new()
@@ -85,7 +85,7 @@ func add_float_parameter(render_material: ShaderMaterial, p_name: String, hint :
 		render_material.set_shader_parameter(p_name, value)
 		)
 
-func add_vector2_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
+func add_vector2_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
 	var p_x_spinbox := SpinBox.new()
 	var p_y_spinbox := SpinBox.new()
@@ -107,7 +107,7 @@ func add_vector2_parameter(render_material: ShaderMaterial, p_name: String, hint
 		render_material.set_shader_parameter(p_name, v)
 		)
 
-func add_vector2i_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
+func add_vector2i_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
 	var p_x_spinbox := SpinBox.new()
 	var p_y_spinbox := SpinBox.new()
@@ -129,7 +129,7 @@ func add_vector2i_parameter(render_material: ShaderMaterial, p_name: String, hin
 		render_material.set_shader_parameter(p_name, v)
 		)
 
-func add_color_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
+func add_color_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
 	var p_color_picker_button := ColorPickerButton.new()
 	p_color_picker_button.color = render_material.get_shader_parameter(p_name) as Color
@@ -149,7 +149,8 @@ func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> v
 	settings_container.add_child(p_texture_button)
 	
 	var texture_file_dialog := FileDialog.new()
-	texture_file_dialog.mode
+	texture_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	texture_file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 
 func _on_render_material_changed(render_material: ShaderMaterial) -> void:
 	update_shader_settings_UI(render_material)
