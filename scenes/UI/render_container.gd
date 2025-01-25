@@ -60,8 +60,6 @@ func _process(_delta: float) -> void:
 		change_zoom((camera.zoom / (Vector2.ONE * 1.2)).max(get_max_zoom_out()))
 
 
-
-
 func get_max_zoom_out() -> Vector2:
 	var ratio := (Vector2(Global.export_settings.resolution) * 1.1) / (camera.get_viewport_rect().size / camera.zoom)
 	var f = maxf(ratio.x, ratio.y)
