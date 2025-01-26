@@ -8,8 +8,7 @@ signal camera_position_changed
 
 func _ready() -> void:
 	camera.zoom = get_max_zoom_out()
-	camera.offset = Render.size / 2.0
-	
+	camera.position = Render.size / 2.0
 	
 	Render.resized.connect(_on_render_resized)
 	camera.get_viewport().size_changed.connect(_on_size_changed)
@@ -25,29 +24,25 @@ func change_zoom(new_zoom: Vector2) -> void:
 	camera_zoom_changed.emit()
 
 
-func get_limit_rect() -> Rect2:
-	var resolution = Vector2(Render.size)
-	var half = resolution / 2.0
-	
-	var rect = camera.get_viewport_rect()
-	var scaled_size : Vector2 = rect.size / camera.zoom
-	var vmin = -scaled_size / 2.0
-	var vmax = vmin + scaled_size
-	
-	var aspect_ratio = Vector2(maxf(rect.size.x / rect.size.y, 1.0), maxf(rect.size.y / rect.size.x, 1.0))
-	
-	var rect_min = vmin / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) + half
-	var rect_max = vmax / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) - half
-	
-	return Rect2(rect_min.min(rect_max), rect_min.max(rect_max))
+#func get_limit_rect() -> Rect2:
+	#var resolution = Vector2(Render.size)
+	#var half = resolution / 2.0
+	#
+	#var rect = camera.get_viewport_rect()
+	#var scaled_size : Vector2 = rect.size / camera.zoom
+	#var vmin = -scaled_size / 2.0
+	#var vmax = vmin + scaled_size
+	#
+	#var aspect_ratio = Vector2(maxf(rect.size.x / rect.size.y, 1.0), maxf(rect.size.y / rect.size.x, 1.0))
+	#
+	#var rect_min = vmin / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) + half
+	#var rect_max = vmax / (Vector2.ONE + .1 * Vector2.ONE / aspect_ratio) - half
+	#
+	#return Rect2(rect_min.min(rect_max), rect_min.max(rect_max))
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_action_pressed("pan"):
-			
-			var limit_rect := get_limit_rect()
-			var rect_min := limit_rect.position
-			var rect_max := limit_rect.size
 			
 			var input := Vector2(event.relative) / camera.zoom
 			
