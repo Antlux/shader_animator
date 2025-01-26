@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=24 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -10,6 +10,7 @@
 [ext_resource type="CodeHighlighter" uid="uid://ciiy0hk5yynkd" path="res://resources/shader_code_highlighter_bck.tres" id="6_b7fne"]
 [ext_resource type="Script" path="res://scenes/UI/shader_code_edit.gd" id="6_yayyj"]
 [ext_resource type="Script" path="res://resources/custom/ShaderFace/ShaderFace.gd" id="6_yw3m7"]
+[ext_resource type="FontFile" uid="uid://cmyfoultcrb6o" path="res://assets/font/SpaceMono-Bold.ttf" id="7_1mb6g"]
 [ext_resource type="Script" path="res://scenes/UI/render_progress_bar.gd" id="7_6g34h"]
 [ext_resource type="Script" path="res://scenes/UI/view_menu_button.gd" id="7_ctqjo"]
 [ext_resource type="Resource" uid="uid://c8pq1qkpqp2mp" path="res://resources/custom/ShaderFace/shader_faces/font_flow.tres" id="7_tyxha"]
@@ -123,6 +124,7 @@ texture = SubResource("ViewportTexture_af6fd")
 stretch_mode = 2
 
 [node name="Grid" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/RenderView/SubViewport" node_paths=PackedStringArray("render_view", "camera") instance=ExtResource("6_akf6h")]
+font = ExtResource("7_1mb6g")
 render_view = NodePath("../..")
 camera = NodePath("../RenderCamera")
 padding = Vector2(10, 10)
