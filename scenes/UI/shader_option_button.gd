@@ -23,4 +23,4 @@ func _on_item_selected(idx: int) -> void:
 
 func select_shader(idx: int) -> void:
 	var shader_material = shader_faces[idx].shader_material
-	Global.render_material = shader_material
+	Render.render_material = shader_material

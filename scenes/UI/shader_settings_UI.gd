@@ -3,7 +3,7 @@ extends PanelContainer
 @export var settings_container: Control
 
 func _ready() -> void:
-	Global.render_material_changed.connect(_on_render_material_changed)
+	Render.changed.connect(_on_render_changed)
 
 
 func update_shader_settings_UI(render_material: ShaderMaterial) -> void:
@@ -152,5 +152,5 @@ func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> v
 	texture_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	texture_file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 
-func _on_render_material_changed(render_material: ShaderMaterial) -> void:
+func _on_render_changed(render_material: ShaderMaterial) -> void:
 	update_shader_settings_UI(render_material)

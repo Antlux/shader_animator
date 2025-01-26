@@ -1,7 +1,6 @@
 extends Node
 
-@export var sub_viewport: SubViewport
-@export var render: ColorRect
+@export var render_viewport: SubViewport
 
 @export var export_button : Button
 @export var file_dialog: FileDialog
@@ -24,8 +23,8 @@ func _on_dir_selected(dir_path: String) -> void:
 	print(test)
 	Global.export_settings.export_type = test
 	
-	var duration :=  Global.export_settings.duration
-	var frame_count := Global.export_settings.frame_count
+	var duration :=  Global.render_settings.duration
+	var frame_count := Global.render_settings.frame_count
 	
 	var frame_delay := duration / (frame_count)
 	
@@ -37,7 +36,7 @@ func _on_dir_selected(dir_path: String) -> void:
 		Global.render_material.set_shader_parameter("outside_time", frame_delay * f)
 		await get_tree().process_frame
 		await get_tree().process_frame
-		captures.append(sub_viewport.get_texture().get_image())
+		captures.append(render_viewport.get_texture().get_image())
 	
 	Global.rendering = false
 	

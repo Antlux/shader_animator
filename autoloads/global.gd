@@ -1,41 +1,14 @@
 extends Node
 
-signal render_material_changed(mat: ShaderMaterial)
-signal render_material_updated(timestamp: float)
-
 @onready var export_settings := ExportSettings.load_or_create()
+@onready var render_settings := RenderSettings.load_or_create()
 
 var current_time: float = 0.0
-var rendering := false
-var render_material: ShaderMaterial:
-	set(value):
-		render_material = value
-		render_material_changed.emit(value)
-
 
 func _ready() -> void:
 	export_settings.changed.connect(_on_export_settings_changed)
-
-
-func _process(delta: float) -> void:
-	
-	if render_material == null:
-		return
-	
-	var duration := Global.export_settings.duration
-	var frame_count := Global.export_settings.frame_count
-	
-	if not rendering:
-		current_time = fmod(current_time + delta, duration)
-		var frame_rate = frame_count / duration;
-		var value = floor(current_time * frame_rate) /  frame_rate
-		update_render_material(value)
-
-
-func update_render_material(timestamp: float) -> void:
-	render_material.set_shader_parameter("outside_time", timestamp)
-	render_material_updated.emit(timestamp)
-
+	render_settings.changed.connect(_on_render_settings_changed)
+	apply_render_settings(Global.render_settings)
 
 func export(captures: Array[Image]) -> void:
 	match export_settings.export_type:
@@ -60,29 +33,29 @@ func export(captures: Array[Image]) -> void:
 			export_gif(captures)
 
 func export_webp(captures: Array[Image]) -> void:
-	var frame_delay := export_settings.duration / export_settings.frame_count
+	var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
 	
 	var array : Array[PackedByteArray] = []
 	for capture in captures:
 		capture.convert(Image.FORMAT_RGBA8)
 		array.append(capture.get_data())
-	var width := export_settings.resolution.x
-	var height := export_settings.resolution.y
-	var path := export_settings.export_path + ".webp"
+	var width := Global.render_settings.resolution.x
+	var height := Global.render_settings.resolution.y
+	var path := Global.export_settings.export_path + ".webp"
 	
 	var error := AnimationExporter.export_webp(path, width, height, frame_delay, array) as Error
 	assert(error == OK, "Webp export failed with code: %s" % error)
 
 func export_gif(captures: Array[Image]) -> void:
-	var frame_delay := export_settings.duration / export_settings.frame_count
+	var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
 	
 	var array : Array[PackedByteArray] = []
 	for capture in captures:
 		capture.convert(Image.FORMAT_RGBA8)
 		array.append(capture.get_data())
-	var width := export_settings.resolution.x
-	var height := export_settings.resolution.y
-	var path := export_settings.export_path + ".gif"
+	var width := Global.render_settings.resolution.x
+	var height := Global.render_settings.resolution.y
+	var path := Global.export_settings.export_path + ".gif"
 	
 	var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
 	assert(error == OK, "GIF export failed with code: %s" % error)
@@ -90,3 +63,13 @@ func export_gif(captures: Array[Image]) -> void:
 
 func _on_export_settings_changed() -> void:
 	export_settings.save()
+
+func _on_render_settings_changed() -> void:
+	render_settings.save()
+	apply_render_settings(Global.render_settings)
+
+
+func apply_render_settings(settings: RenderSettings) -> void:
+	Render.size = settings.resolution
+	Render.duration = settings.duration
+	Render.frame_count = settings.frame_count

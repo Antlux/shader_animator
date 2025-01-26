@@ -1,25 +1,32 @@
-extends SubViewportContainer
+class_name RenderView extends SubViewportContainer
 
 signal camera_zoom_changed
+signal camera_position_changed
 
 @export var camera: Camera2D
 
 
 func _ready() -> void:
 	camera.zoom = get_max_zoom_out()
-	camera.offset = Global.export_settings.resolution / 2.0
-	Global.export_settings.changed.connect(_on_export_settings_changed)
+	camera.offset = Render.size / 2.0
+	
+	
+	Render.resized.connect(_on_render_resized)
 	camera.get_viewport().size_changed.connect(_on_size_changed)
 	change_zoom(camera.zoom)
 
 
-func change_zoom(new_zoom: Vector2):
+func change_position(new_position: Vector2) -> void:
+	camera.position = new_position
+	camera_position_changed.emit()
+
+func change_zoom(new_zoom: Vector2) -> void:
 	camera.zoom = new_zoom
 	camera_zoom_changed.emit()
 
 
 func get_limit_rect() -> Rect2:
-	var resolution = Vector2(Global.export_settings.resolution)
+	var resolution = Vector2(Render.size)
 	var half = resolution / 2.0
 	
 	var rect = camera.get_viewport_rect()
@@ -44,9 +51,7 @@ func _gui_input(event: InputEvent) -> void:
 			
 			var input := Vector2(event.relative) / camera.zoom
 			
-			camera.position.x = camera.position.x - input.x
-			camera.position.y = camera.position.y - input.y
-
+			change_position(camera.position - input)
 
 
 func _process(_delta: float) -> void:
@@ -61,7 +66,7 @@ func _process(_delta: float) -> void:
 
 
 func get_max_zoom_out() -> Vector2:
-	var ratio := (Vector2(Global.export_settings.resolution) * 1.1) / (camera.get_viewport_rect().size / camera.zoom)
+	var ratio := (Vector2(Render.size) * 1.5) / (camera.get_viewport_rect().size / camera.zoom)
 	var f = maxf(ratio.x, ratio.y)
 	return (camera.zoom / f).min(Vector2.ONE)
 
@@ -71,8 +76,6 @@ func _on_size_changed() -> void:
 	change_zoom(camera.zoom.max(get_max_zoom_out()))
 
 
-
-func _on_export_settings_changed() -> void:
+func _on_render_resized(new_size: Vector2i) -> void:
+	camera.offset = new_size / 2.0
 	change_zoom(camera.zoom.max(get_max_zoom_out()))
-	
-	camera.offset = Global.export_settings.resolution / 2.0

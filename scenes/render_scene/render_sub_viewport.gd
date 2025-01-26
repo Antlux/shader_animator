@@ -1,11 +1,11 @@
 extends SubViewport
 
 func _ready() -> void:
-	update_render_resolution()
-	Global.export_settings.changed.connect(_on_export_settings_changed)
+	Render.resized.connect(_on_render_resized)
+	size = Render.size
 
-func update_render_resolution() -> void:
-	size = Global.export_settings.resolution
+func update_size(new_size: Vector2i) -> void:
+	size = new_size
 
-func _on_export_settings_changed() -> void:
-	update_render_resolution()
+func _on_render_resized(new_size: Vector2i) -> void:
+	update_size(new_size)
