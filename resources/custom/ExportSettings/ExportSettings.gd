@@ -14,18 +14,6 @@ enum ExportType {
 	set(value):
 		export_type = value
 		emit_changed()
-@export var duration: float = 1.0:
-	set(value):
-		duration = maxf(0, value)
-		emit_changed()
-@export var frame_count: float = 30.0:
-	set(value):
-		frame_count = maxf(1, value)
-		emit_changed()
-@export var resolution: Vector2i = Vector2i(512, 512):
-	set(value):
-		resolution = Vector2i.ZERO.max(value)
-		emit_changed()
 @export var export_path: String = "/" :
 	set(value):
 		export_path = value
