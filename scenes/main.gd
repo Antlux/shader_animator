@@ -30,14 +30,14 @@ func _on_dir_selected(dir_path: String) -> void:
 	
 	var captures: Array[Image] = []
 	
-	Global.rendering = true
+	Render.rendering = true
 	
 	for f in (frame_count):
-		Global.render_material.set_shader_parameter("outside_time", frame_delay * f)
+		Render.update(frame_delay * f)
 		await get_tree().process_frame
 		await get_tree().process_frame
 		captures.append(render_viewport.get_texture().get_image())
 	
-	Global.rendering = false
+	Render.rendering = false
 	
 	Global.export(captures)

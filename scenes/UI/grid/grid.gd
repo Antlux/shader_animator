@@ -29,10 +29,8 @@ class_name Grid extends Control
 		draw_grid_units = value
 		queue_redraw()
 
-
 var ci := get_canvas_item()
 var surface := RenderingServer.canvas_item_create()
-
 
 func _ready() -> void:
 	RenderingServer.canvas_item_set_parent(surface, ci) # For drawing of grid units
@@ -75,13 +73,10 @@ func _draw() -> void:
 			var unit_text := "%s" % y 
 			unit_rect = get_string_rect(unit_text, font , 16)
 			var pos := Vector2(vmin.x, y) * zoom + Vector2.UP * (unit_rect.size.y / 2.0)
-			RenderingServer.canvas_item_add_rect(surface, 
-				Rect2(pos, unit_rect.size),
-				Color(Color.RED, .5))
 			font.draw_string(surface, pos + Vector2.DOWN * unit_rect.size.y, unit_text)
 		
 		if draw_grid_lines:
-			draw_horizontal_line(Vector2(vmin.x, y) * zoom, Vector2(vmax.x, y) * zoom, unit_rect.size.x)
+			draw_horizontal_line(Vector2(vmin.x, y) * zoom, Vector2(vmax.x, y) * zoom, unit_rect.size)
 	
 	
 	var unit_rect := Rect2()
@@ -90,14 +85,14 @@ func _draw() -> void:
 		unit_rect = get_string_rect(unit_text, font, 16)
 	
 	if draw_x_axis:
-		draw_horizontal_line(Vector2(vmin.x, 0) * zoom.x, Vector2(vmax.x, 0) * zoom.x, unit_rect.size.x, x_axis_color, 2.0, 3.0)
+		draw_horizontal_line(Vector2(vmin.x, 0) * zoom.x, Vector2(vmax.x, 0) * zoom.x, unit_rect.size, x_axis_color, 2.0, 3.0)
 	
 	if draw_y_axis:
 		draw_vertical_line(Vector2(0, vmin.y) * zoom, Vector2(0, vmax.y) * zoom, unit_rect.size.y, y_axis_color, 2.0, 3.0)
 
 
-func draw_horizontal_line(start: Vector2, end: Vector2, unit_rect_size_x: float, color := grid_line_color, width := 1, radius:= 2.0) -> void:
-	var line_start := start + Vector2.RIGHT * (unit_rect_size_x + padding.x + radius)
+func draw_horizontal_line(start: Vector2, end: Vector2, unit_rect_size: Vector2, color := grid_line_color, width := 1, radius:= 2.0) -> void:
+	var line_start := start + Vector2.RIGHT * (unit_rect_size.x + padding.x + radius)
 	var line_end := end
 	RenderingServer.canvas_item_add_line(surface, line_start, line_end, color, width)
 	RenderingServer.canvas_item_add_circle(surface, line_start, radius, color)
@@ -108,12 +103,6 @@ func draw_vertical_line(start: Vector2, end: Vector2, unit_rect_size_y: float, c
 	RenderingServer.canvas_item_add_line(surface, line_start, line_end, color, width)
 	RenderingServer.canvas_item_add_circle(surface, line_start, radius, color)
 
-
-func _on_camera_position_changed() -> void:
-	queue_redraw()
-
-func _on_camera_zoom_changed() -> void:
-	queue_redraw()
 
 func get_string_rect(text: String, font: Font, font_size: int) -> Rect2:
 	var text_server := TextServerManager.get_primary_interface()
@@ -129,16 +118,18 @@ func get_string_rect(text: String, font: Font, font_size: int) -> Rect2:
 	
 	var rects: Array[Rect2] = []
 	var x := 0
-	for glyph in glyphs:
+	for idx in glyphs.size():
+		var glyph := glyphs[idx]
 		var glyph_font_rid: RID = glyph.get('font_rid', RID())
 		var glyph_font_size := Vector2i(glyph.get('font_size', 8), 0)
 		var glyph_index: int = glyph.get('index', -1)
 		var glyph_offset := text_server.font_get_glyph_offset(glyph_font_rid, glyph_font_size, glyph_index)
+		var glyph_advance: int = glyph.get('advance', 0)
 		var glyph_size := text_server.font_get_glyph_size(glyph_font_rid, glyph_font_size, glyph_index)
+		glyph_size.x -= maxi(0, glyph_size.x - glyph_advance)
 		var glyph_rect := Rect2(Vector2(x, ascent) + glyph_offset, glyph_size)
 		if glyph_rect.has_area():
 			rects.append(glyph_rect)
-		var glyph_advance: int = glyph.get('advance', 0)
 		x += glyph_advance
 	
 
@@ -148,3 +139,10 @@ func get_string_rect(text: String, font: Font, font_size: int) -> Rect2:
 		rect = rect.merge(r)
 	
 	return rect
+
+
+func _on_camera_position_changed() -> void:
+	queue_redraw()
+
+func _on_camera_zoom_changed() -> void:
+	queue_redraw()

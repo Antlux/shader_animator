@@ -71,6 +71,9 @@ func _on_size_changed() -> void:
 	change_zoom(camera.zoom.max(get_max_zoom_out()))
 
 
-func _on_render_resized(new_size: Vector2i) -> void:
-	camera.offset = new_size / 2.0
-	change_zoom(camera.zoom.max(get_max_zoom_out()))
+func _on_render_resized(from: Vector2i, to: Vector2i) -> void:
+	var delta := (to / 2.0) - (from / 2.0)
+	change_position(camera.position + delta)
+	prints(from, to, delta)
+	#change_zoom(camera.zoom.max(get_max_zoom_out()))
+	

@@ -34,8 +34,9 @@ size = Vector2(0, 0)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nnubo"]
 size = Vector2(0, 0)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("export_button", "file_dialog")]
+[node name="Main" type="Node" node_paths=PackedStringArray("render_viewport", "export_button", "file_dialog")]
 script = ExtResource("1_oq0dg")
+render_viewport = NodePath("RenderSubViewport")
 export_button = NodePath("UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/ExportButton")
 file_dialog = NodePath("FileDialog")
 
@@ -92,141 +93,77 @@ theme_override_constants/separation = 12
 [node name="VSplitContainer" type="VSplitContainer" parent="UI/ColorRect/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-split_offset = -215
+split_offset = 2330
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="RenderView" type="SubViewportContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer" node_paths=PackedStringArray("camera")]
-texture_filter = 2
+[node name="Control" type="Control" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RenderView" type="SubViewportContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control" node_paths=PackedStringArray("camera")]
+texture_filter = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
 script = ExtResource("5_yals7")
 camera = NodePath("SubViewport/RenderCamera")
 
-[node name="SubViewport" type="SubViewport" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/RenderView"]
+[node name="SubViewport" type="SubViewport" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderView"]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1041, 346)
+size = Vector2i(927, 412)
 render_target_update_mode = 4
 
-[node name="RenderCamera" type="Camera2D" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/RenderView/SubViewport"]
+[node name="RenderCamera" type="Camera2D" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderView/SubViewport"]
 
-[node name="TextureRect" type="TextureRect" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/RenderView/SubViewport"]
+[node name="TextureRect" type="TextureRect" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderView/SubViewport"]
 texture_filter = 1
 offset_right = 40.0
 offset_bottom = 40.0
 texture = SubResource("ViewportTexture_af6fd")
 stretch_mode = 2
 
-[node name="Grid" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/RenderView/SubViewport" node_paths=PackedStringArray("render_view", "camera") instance=ExtResource("6_akf6h")]
+[node name="Grid" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderView/SubViewport" node_paths=PackedStringArray("render_view", "camera") instance=ExtResource("6_akf6h")]
 font = ExtResource("7_1mb6g")
 render_view = NodePath("../..")
 camera = NodePath("../RenderCamera")
-padding = Vector2(10, 10)
+padding = Vector2(8, 8)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer"]
-layout_mode = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
 size_flags_vertical = 8
 theme_override_constants/separation = 12
 
-[node name="RenderProgressBar" type="ProgressBar" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer"]
+[node name="RenderProgressBar" type="ProgressBar" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/HBoxContainer"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 1
+size_flags_vertical = 8
 theme_override_styles/background = SubResource("StyleBoxFlat_xldfy")
 theme_override_styles/fill = SubResource("StyleBoxFlat_oawjl")
 max_value = 1.0
-step = 0.001
+step = 1.0
 show_percentage = false
 script = ExtResource("7_6g34h")
 
-[node name="RenderSettings" type="PanelContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_count_spin_box")]
-layout_mode = 2
-script = ExtResource("13_owcuf")
-resolution_x_spin_box = NodePath("MarginContainer/HBoxContainer/Resolution/ResolutionXSpinBox")
-resolution_y_spin_box = NodePath("MarginContainer/HBoxContainer/Resolution/ResolutionYSpinBox")
-duration_spinbox = NodePath("MarginContainer/HBoxContainer/Duration/DurationSpinBox")
-frame_count_spin_box = NodePath("MarginContainer/HBoxContainer/FrameCount/FrameCountSpinBox")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings"]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer"]
-layout_mode = 2
-
-[node name="FrameCount" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="FrameCountLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/FrameCount"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "Frame count :"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="FrameCountSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/FrameCount"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
-max_value = 9.22337e+18
-value = 12.0
-
-[node name="VSeparator" type="VSeparator" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Duration" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="DurationLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/Duration"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "Duration :"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="DurationSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/Duration"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
-step = 0.01
-value = 1.0
-
-[node name="VSeparator2" type="VSeparator" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Resolution" type="HBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="ResolutionLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/Resolution"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "Resolution :"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ResolutionXSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/Resolution"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
-min_value = 1.0
-max_value = 16384.0
-value = 512.0
-
-[node name="ResolutionYSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer/RenderSettings/MarginContainer/HBoxContainer/Resolution"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_nnubo")
-min_value = 1.0
-max_value = 16384.0
-value = 512.0
-
-[node name="ViewMenuButton" type="MenuButton" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("grid")]
+[node name="ViewMenuButton" type="MenuButton" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/HBoxContainer" node_paths=PackedStringArray("grid")]
 layout_mode = 2
 text = "View"
 flat = false
@@ -234,8 +171,11 @@ script = ExtResource("7_ctqjo")
 grid = NodePath("../../RenderView/SubViewport/Grid")
 
 [node name="CodeEdit" type="CodeEdit" parent="UI/ColorRect/MarginContainer/GridContainer/VSplitContainer"]
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 scroll_smooth = true
+minimap_draw = true
+minimap_width = 120
 syntax_highlighter = ExtResource("6_b7fne")
 highlight_current_line = true
 draw_tabs = true
@@ -285,6 +225,90 @@ theme_override_constants/margin_bottom = 4
 [node name="GridContainer" type="GridContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ShaderSettings/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 columns = 2
+
+[node name="RenderSettings" type="PanelContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_count_spin_box")]
+layout_mode = 2
+script = ExtResource("13_owcuf")
+resolution_x_spin_box = NodePath("MarginContainer/GridContainer/ResolutionXSpinBox")
+resolution_y_spin_box = NodePath("MarginContainer/GridContainer/ResolutionYSpinBox")
+duration_spinbox = NodePath("MarginContainer/GridContainer/DurationSpinBox")
+frame_count_spin_box = NodePath("MarginContainer/GridContainer/FrameCountSpinBox")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="GridContainer" type="GridContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="TextureFilterLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Texture filter :"
+
+[node name="TextureFilterOptionButton" type="OptionButton" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResolutionLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Resolution :"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ResolutionXSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
+min_value = 1.0
+max_value = 16384.0
+value = 512.0
+suffix = "px"
+
+[node name="Empty" type="Control" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="ResolutionYSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_icons/updown = SubResource("PlaceholderTexture2D_nnubo")
+min_value = 1.0
+max_value = 16384.0
+value = 512.0
+suffix = "px"
+
+[node name="DurationLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Duration :"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="DurationSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
+step = 0.01
+value = 1.0
+suffix = "s"
+
+[node name="FrameCountLabel" type="Label" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Frame count :"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="FrameCountSpinBox" type="SpinBox" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
+max_value = 9.22337e+18
+value = 12.0
 
 [node name="ExportSettings" type="PanelContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer"]
 layout_mode = 2
