@@ -10,27 +10,59 @@ func _ready() -> void:
 	render_settings.changed.connect(_on_render_settings_changed)
 	apply_render_settings(Global.render_settings)
 
-func export(captures: Array[Image]) -> void:
+func export(captures: Array[Image]) -> void:	
+	var split_path := Global.export_settings.export_path.rsplit(".", true, 1)
+	var stem := split_path[0]
+	var extension := split_path[1]
+	
 	match export_settings.export_type:
-		ExportSettings.ExportType.EXR:
-			for idx in captures.size():
-				var capture := captures[idx]
-				var error := capture.save_exr(Global.export_settings.export_path + "-%s.exr" % idx)
-				assert(error == OK, "Could not save as exr")
-		ExportSettings.ExportType.JPG:
-			for idx in captures.size():
-				var capture := captures[idx]
-				var error := capture.save_jpg(Global.export_settings.export_path + "-%s.jpg" % idx)
-				assert(error == OK, "Could not save as jpg")
-		ExportSettings.ExportType.PNG:
-			for idx in captures.size():
-				var capture := captures[idx]
-				var error := capture.save_png(Global.export_settings.export_path + "-%s.png" % idx)
-				assert(error == OK, "Could not save as png")
 		ExportSettings.ExportType.WEBP:
 			export_webp(captures)
 		ExportSettings.ExportType.GIF:
 			export_gif(captures)
+		ExportSettings.ExportType.EXR: 
+			for idx in captures.size():
+				var capture := captures[idx]
+				var path := stem + ("-%s." % idx) + extension
+				var error : Error = capture.save_exr(path)
+				assert(error == OK, "Could not save as %s" % extension)
+		ExportSettings.ExportType.JPG:
+			for idx in captures.size():
+				var capture := captures[idx]
+				var path := stem + ("-%s." % idx) + extension
+				var error : Error = capture.save_jpg(path)
+				assert(error == OK, "Could not save as %s" % extension)
+		ExportSettings.ExportType.PNG:
+			for idx in captures.size():
+				var capture := captures[idx]
+				var path := stem + ("-%s." % idx) + extension
+				var error : Error = capture.save_png(path)
+				assert(error == OK, "Could not save as %s" % extension)
+	
+
+	
+
+			
+			
+		#ExportSettings.ExportType.JPG:
+			#var split_path := Global.export_settings.export_path.rsplit(".", true, 1)
+			#var extension := split_path[0]
+			#var stem := split_path[1]
+			#for idx in captures.size():
+				#var capture := captures[idx]
+				#var path := stem + ("-%s." % idx) + extension
+				#var error := capture.save_jpg(path)
+				#assert(error == OK, "Could not save as jpg")
+		#ExportSettings.ExportType.PNG:
+			#for idx in captures.size():
+				#var capture := captures[idx]
+				#var error := capture.save_png(Global.export_settings.export_path + "-%s.png" % idx)
+				#assert(error == OK, "Could not save as png")
+		#
+		#_:
+			#match export_settings.export_type:
+				#ExportSettings.ExportType.EXR or ExportSettings.ExportType.JPG or ExportSettings.ExportType.PNG:
+			#pass
 
 func export_webp(captures: Array[Image]) -> void:
 	var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count

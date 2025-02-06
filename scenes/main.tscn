@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=25 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -18,6 +18,7 @@
 [ext_resource type="Resource" uid="uid://71isyh7ocgh8" path="res://resources/custom/ShaderFace/shader_faces/font_spiral.tres" id="9_auy6p"]
 [ext_resource type="Script" path="res://scenes/UI/shader_settings_UI.gd" id="11_r3m6x"]
 [ext_resource type="Script" path="res://scenes/UI/render_settings_UI.gd" id="13_owcuf"]
+[ext_resource type="Script" path="res://scenes/UI/export_settings_UI.gd" id="19_xdycj"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_af6fd"]
 viewport_path = NodePath("RenderSubViewport")
@@ -37,7 +38,7 @@ size = Vector2(0, 0)
 [node name="Main" type="Node" node_paths=PackedStringArray("render_viewport", "export_button", "file_dialog")]
 script = ExtResource("1_oq0dg")
 render_viewport = NodePath("RenderSubViewport")
-export_button = NodePath("UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/ExportButton")
+export_button = NodePath("UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/ExportButton")
 file_dialog = NodePath("FileDialog")
 
 [node name="RenderSubViewport" type="SubViewport" parent="."]
@@ -57,11 +58,9 @@ grow_vertical = 2
 script = ExtResource("4_7htye")
 
 [node name="FileDialog" type="FileDialog" parent="."]
-title = "Open a Directory"
 initial_position = 1
 size = Vector2i(512, 512)
-ok_button_text = "Select Current Folder"
-file_mode = 2
+ok_button_text = "Save"
 access = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -310,8 +309,10 @@ theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
 max_value = 9.22337e+18
 value = 12.0
 
-[node name="ExportSettings" type="PanelContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer"]
+[node name="ExportSettings" type="PanelContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("export_type_option_button")]
 layout_mode = 2
+script = ExtResource("19_xdycj")
+export_type_option_button = NodePath("MarginContainer/VBoxContainer/ExportTypeOptionButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings"]
 layout_mode = 2
@@ -320,7 +321,13 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="ExportButton" type="Button" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer"]
+layout_mode = 2
+
+[node name="ExportTypeOptionButton" type="OptionButton" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ExportButton" type="Button" parent="UI/ColorRect/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Export"
