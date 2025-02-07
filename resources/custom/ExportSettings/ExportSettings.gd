@@ -6,8 +6,8 @@ enum ExportType {
 	EXR,
 	JPG,
 	PNG,
-	WEBP,
-	GIF,
+	#WEBP,
+	#GIF,
 }
 
 @export var export_type := ExportType.PNG: 

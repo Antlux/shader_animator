@@ -54,10 +54,30 @@ func _process(_delta: float) -> void:
 		return
 	
 	if Input.is_action_just_pressed("zoom_in"):
+		var start_pos := get_viewpos(get_local_mouse_position())
 		change_zoom(camera.zoom * (Vector2.ONE * 1.2))
+		var end_pos := get_viewpos(get_local_mouse_position())
+		
+		camera.position -= end_pos - start_pos
 		
 	if Input.is_action_just_pressed("zoom_out"):
+		var start_pos := get_viewpos(get_local_mouse_position())
 		change_zoom((camera.zoom / (Vector2.ONE * 1.2)).max(get_max_zoom_out()))
+		var end_pos := get_viewpos(get_local_mouse_position())
+		
+		camera.position -= end_pos - start_pos
+
+
+func get_viewpos(pos: Vector2) -> Vector2:
+	# Gets the position of the mouse relative to the center of the view
+	var pos_relative_center_view := pos - camera.get_viewport_rect().size / 2.0
+	
+	# Scales it to the camera zoom
+	var scaled_pos := (pos_relative_center_view / camera.zoom)
+	
+	# Offsets it by the camera position in view world
+	var relative_pos := camera.position + scaled_pos
+	return relative_pos
 
 
 func get_max_zoom_out() -> Vector2:

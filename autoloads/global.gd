@@ -102,10 +102,12 @@ func export_web(captures: Array[Image]) -> void:
 		writer.start_file("export-%s.%s" % [i, extension])
 		
 		match export_settings.export_type:
-			ExportSettings.ExportType.PNG:
-				writer.write_file(capture.save_png_to_buffer())
+			ExportSettings.ExportType.EXR:
+				writer.write_file(capture.save_exr_to_buffer())
 			ExportSettings.ExportType.JPG:
 				writer.write_file(capture.save_jpg_to_buffer())
+			ExportSettings.ExportType.PNG:
+				writer.write_file(capture.save_png_to_buffer())
 		
 		writer.close_file()
 	writer.close()

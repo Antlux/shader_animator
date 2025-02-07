@@ -19,6 +19,7 @@ var size := Vector2i(512, 512) :
 			var previous := size
 			size = value
 			resized.emit(previous, value)
+
 var duration: float = 1.0
 var frame_count: int = 1
 
