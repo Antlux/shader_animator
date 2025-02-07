@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=23 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://scenes/UI/shader_settings_UI.gd" id="11_r3m6x"]
 [ext_resource type="Script" path="res://scenes/UI/shader_menu_button.gd" id="12_eista"]
 [ext_resource type="Script" path="res://scenes/UI/render_settings_UI.gd" id="13_owcuf"]
+[ext_resource type="Script" path="res://scenes/UI/text_input_dialog.gd" id="14_canee"]
 [ext_resource type="Script" path="res://scenes/UI/export_settings_UI.gd" id="19_xdycj"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_af6fd"]
@@ -164,18 +165,36 @@ flat = false
 script = ExtResource("7_ctqjo")
 grid = NodePath("../../RenderView/SubViewport/Grid")
 
-[node name="CodeEdit" type="CodeEdit" parent="UI/MarginContainer/GridContainer/VSplitContainer"]
+[node name="CodeEdit" type="CodeEdit" parent="UI/MarginContainer/GridContainer/VSplitContainer" node_paths=PackedStringArray("update_button")]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 scroll_smooth = true
-minimap_draw = true
 minimap_width = 120
 syntax_highlighter = ExtResource("6_b7fne")
 highlight_current_line = true
 draw_tabs = true
 gutters_draw_line_numbers = true
+code_completion_enabled = true
 auto_brace_completion_enabled = true
 script = ExtResource("6_yayyj")
+update_button = NodePath("MarginContainer/Button")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/GridContainer/VSplitContainer/CodeEdit"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -47.0
+offset_right = 81.0
+grow_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Button" type="Button" parent="UI/MarginContainer/GridContainer/VSplitContainer/CodeEdit/MarginContainer"]
+layout_mode = 2
+text = "Update"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2
@@ -186,14 +205,59 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 script = ExtResource("5_0enrd")
 
-[node name="ShaderActionMenuButton" type="MenuButton" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("import_file_dialog", "export_file_dialog", "deletion_confirmation_dialog")]
+[node name="ShaderActionMenuButton" type="MenuButton" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("creation_text_input_dialog", "import_file_dialog", "export_file_dialog", "deletion_confirmation_dialog")]
 layout_mode = 2
 text = "Action"
 flat = false
 script = ExtResource("12_eista")
+creation_text_input_dialog = NodePath("TextInputDialog")
 import_file_dialog = NodePath("ImportFileDialog")
 export_file_dialog = NodePath("ExportFileDialog")
 deletion_confirmation_dialog = NodePath("DeletionConfirmationDialog")
+
+[node name="TextInputDialog" type="PopupPanel" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton" node_paths=PackedStringArray("line_edit", "confirm_button", "cancel_button")]
+initial_position = 2
+size = Vector2i(250, 117)
+script = ExtResource("14_canee")
+line_edit = NodePath("MarginContainer/VBoxContainer/LineEdit")
+confirm_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ConfimButton")
+cancel_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/CancelButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 246.0
+offset_bottom = 113.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Please provide a name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Shader Animation Name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfimButton" type="Button" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Confirm"
+
+[node name="CancelButton" type="Button" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton/TextInputDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
 
 [node name="ImportFileDialog" type="FileDialog" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton"]
 auto_translate_mode = 1
