@@ -12,4 +12,4 @@ func _on_render_changed(render_material: ShaderMaterial) -> void:
 	text = render_material.shader.code
 
 func _on_text_changed() -> void:
-	Global.render_material.shader.code = text
+	Render.render_material.shader.code = text

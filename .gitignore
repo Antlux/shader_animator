@@ -5,3 +5,4 @@
 gif-exporter/target/
 gif-exporter/Cargo.lock
 *.tmp
+.exports/
