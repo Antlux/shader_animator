@@ -2,6 +2,7 @@ extends Node
 
 @onready var export_settings := ExportSettings.load_or_create()
 @onready var render_settings := RenderSettings.load_or_create()
+@onready var shader_animations: Array[ShaderAnimation] = load_shader_animations()
 
 var current_time: float = 0.0
 
@@ -10,6 +11,25 @@ func _ready() -> void:
 	render_settings.changed.connect(_on_render_settings_changed)
 	apply_render_settings(Global.render_settings)
 
+
+func load_shader_animations() -> Array[ShaderAnimation]:
+	var arr: Array[ShaderAnimation] = []
+	var shader_animations_dir := DirAccess.open("user://shader_animations/")
+	if not shader_animations_dir:
+		return arr
+		
+	for path in shader_animations_dir.get_files():
+		var anim := ShaderAnimation.load_animation("user://shader_animations/" + path)
+		if anim:
+			arr.append(anim)
+			print(path)
+	
+	return arr
+
+func apply_render_settings(settings: RenderSettings) -> void:
+	ShaderAnimationRenderer.size = settings.resolution
+	ShaderAnimationRenderer.duration = settings.duration
+	ShaderAnimationRenderer.frame_count = settings.frame_count
 
 func export(captures: Array[Image]) -> void:
 	var split_path := Global.export_settings.export_path.rsplit(".", true, 1) as PackedStringArray
@@ -96,10 +116,7 @@ func _on_render_settings_changed() -> void:
 	apply_render_settings(Global.render_settings)
 
 
-func apply_render_settings(settings: RenderSettings) -> void:
-	ShaderAnimationRenderer.size = settings.resolution
-	ShaderAnimationRenderer.duration = settings.duration
-	ShaderAnimationRenderer.frame_count = settings.frame_count
+
 
 
 #func export_webp(captures: Array[Image]) -> void:

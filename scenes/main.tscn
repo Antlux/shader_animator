@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=21 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -13,11 +13,7 @@
 [ext_resource type="Script" path="res://scenes/UI/render_progress_bar.gd" id="7_6g34h"]
 [ext_resource type="Script" path="res://scenes/UI/view_menu_button.gd" id="7_ctqjo"]
 [ext_resource type="Script" path="res://scenes/UI/shader_settings_UI.gd" id="11_r3m6x"]
-[ext_resource type="Script" path="res://resources/custom/ShaderAnimation/shader_animation.gd" id="13_0bgb8"]
 [ext_resource type="Script" path="res://scenes/UI/render_settings_UI.gd" id="13_owcuf"]
-[ext_resource type="Resource" uid="uid://b1y5k64al6qk2" path="res://resources/custom/ShaderAnimation/shader_animations/font_drip.tres" id="14_c5e0i"]
-[ext_resource type="Resource" uid="uid://c8pq1qkpqp2mp" path="res://resources/custom/ShaderAnimation/shader_animations/font_flow.tres" id="15_tvby6"]
-[ext_resource type="Resource" uid="uid://71isyh7ocgh8" path="res://resources/custom/ShaderAnimation/shader_animations/font_spiral.tres" id="16_0v6t4"]
 [ext_resource type="Script" path="res://scenes/UI/export_settings_UI.gd" id="19_xdycj"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_af6fd"]
@@ -187,7 +183,6 @@ theme_override_constants/separation = 12
 [node name="ShaderOptionButton" type="OptionButton" parent="UI/MarginContainer/GridContainer/VBoxContainer"]
 layout_mode = 2
 script = ExtResource("5_0enrd")
-shader_animations = Array[ExtResource("13_0bgb8")]([ExtResource("14_c5e0i"), ExtResource("15_tvby6"), ExtResource("16_0v6t4")])
 
 [node name="ShaderSettings" type="PanelContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("settings_container")]
 layout_mode = 2

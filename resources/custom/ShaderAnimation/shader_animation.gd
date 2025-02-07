@@ -45,11 +45,32 @@ func generate_parameters_dict() -> Dictionary:
 		param_dict[param.name] = param.get_value()
 	return param_dict
 
+
 func apply_parameters_dict() -> void:
 	for idx in parameters_dict.size():
 		var param_name : String = parameters_dict.keys()[idx]
 		var param_value : Variant = parameters_dict.values()[idx]
 		shader_material.set_shader_parameter(param_name, param_value)
+
+
+static func load_animation(path: String) -> ShaderAnimation:
+	if ResourceLoader.exists(path, "ShaderAnimation"):
+		var anim: ShaderAnimation = ResourceLoader.load(path)
+		anim.apply_parameters_dict()
+		return anim
+	return null
+
+func save() -> void:
+	parameters_dict = generate_parameters_dict()
+	var user_absolute_path := OS.get_user_data_dir()
+	if not DirAccess.open("user://shader_animations/"):
+		var mkdir_err := DirAccess.make_dir_absolute(user_absolute_path + "/shader_animations/")
+		assert(mkdir_err == OK, "Could not create dir: %s" % mkdir_err)
+	
+	print("Saving animation")
+	
+	var save_error := ResourceSaver.save(self, "user://shader_animations/%s.tres" % self.name.replace(" ", "_").to_lower().strip_edges())
+	assert(save_error == OK, "Could not save shader animation: %s" % save_error)
 
 
 
@@ -73,5 +94,6 @@ class Parameter:
 	
 	## Returns the value of pointed parameter of the active render material.
 	func get_value() -> Variant:
+		print(self.name + ": %s" % shader_animation.shader_material.get_shader_parameter(name))
 		return shader_animation.shader_material.get_shader_parameter(name)
 	

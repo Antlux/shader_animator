@@ -11,12 +11,7 @@ signal ended_rendering
 var render_viewport: SubViewport = null
 
 ## Active render shader material
-var shader_animation: ShaderAnimation: 
-	set(value):
-		if shader_animation != value:
-			shader_animation = value
-			shader_animation_changed.emit(shader_animation)
-
+var shader_animation: ShaderAnimation
 
 var _rendering := false 
 
@@ -43,12 +38,26 @@ var size := Vector2i(512, 512) :
 
 
 
+
 func _process(delta: float) -> void:
-	if not shader_animation and not shader_animation.shader_material:
+	if shader_animation == null:
+		return
+		
+	if shader_animation.shader_material == null:
 		return
 	
 	if not _rendering:
 		set_time(current_time + delta)
+
+
+func change_shader_animation(to: ShaderAnimation) -> void:
+	if shader_animation and shader_animation.shader_parameter_changed.is_connected(_on_shader_parameter_changed):
+		shader_animation.shader_parameter_changed.disconnect(_on_shader_parameter_changed)
+		
+	shader_animation = to
+	shader_animation.shader_parameter_changed.connect(_on_shader_parameter_changed)
+	
+	shader_animation_changed.emit(shader_animation)
 
 
 ## Set the active render shader material time to the [param timestamp] parameter (in seconds) and emits [signal Render.updated].
@@ -85,3 +94,7 @@ func render_frames() -> Array[Image]:
 	ended_rendering.emit()
 	
 	return captures
+
+
+func _on_shader_parameter_changed() -> void:
+	shader_animation.save()

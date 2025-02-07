@@ -8,7 +8,8 @@ func _ready() -> void:
 	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
 	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 	
-	update_shader_settings_UI()
+	if ShaderAnimationRenderer.shader_animation:
+		update_shader_settings_UI()
 
 
 func update_shader_settings_UI() -> void:
@@ -40,10 +41,8 @@ func add_parameter_label(p_name: String) -> void:
 	p_label.text = p_name
 	settings_container.add_child(p_label)
 
-func add_spinbox(value_changed_function: Callable, start_value: float, settings: SpinboxSettings = null) -> SpinBox:
+func add_spinbox(value_changed_function: Callable, value: float, settings: SpinboxSettings = null) -> void:
 	var spinbox := SpinBox.new()
-	
-	spinbox.value = start_value
 	
 	if settings:
 		spinbox.min_value = settings.min
@@ -60,7 +59,9 @@ func add_spinbox(value_changed_function: Callable, start_value: float, settings:
 		
 	spinbox.value_changed.connect(value_changed_function)
 	
-	return spinbox
+	settings_container.add_child(spinbox)
+	
+	spinbox.set_value_no_signal(value)
 
 func add_bool_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
@@ -81,9 +82,8 @@ func add_int_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	var start_value : int = parameter.get_value()
 	var value_changed_function := func(value: int): 
 		parameter.set_value(value)
-	var p_spinbox = add_spinbox(value_changed_function, start_value, spinbox_settings)
 	
-	settings_container.add_child(p_spinbox)
+	add_spinbox(value_changed_function, start_value, spinbox_settings)
 
 func add_float_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
@@ -98,9 +98,7 @@ func add_float_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	
 	var start_value : float = parameter.get_value()
 	var value_changed_function := func(value: float): parameter.set_value(value)
-	var p_spinbox = add_spinbox(value_changed_function, start_value, spinbox_settings)
-	
-	settings_container.add_child(p_spinbox)
+	add_spinbox(value_changed_function, start_value, spinbox_settings)
 
 func add_vector2_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
@@ -110,8 +108,8 @@ func add_vector2_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	var x_value_changed_function := func(value: float):
 		var new_value = Vector2(value, (parameter.get_value() as Vector2).y)
 		parameter.set_value(new_value)
-	var p_x_spinbox := add_spinbox(x_value_changed_function, x_start_value, x_spinbox_settings)
-	settings_container.add_child(p_x_spinbox)
+	add_spinbox(x_value_changed_function, x_start_value, x_spinbox_settings)
+	
 	
 	settings_container.add_child(Control.new())
 	
@@ -120,8 +118,7 @@ func add_vector2_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	var y_value_changed_function := func(value: float): 
 		var new_value = Vector2((parameter.get_value() as Vector2).x, value)
 		parameter.set_value(new_value)
-	var p_y_spinbox := add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
-	settings_container.add_child(p_y_spinbox)
+	add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
 
 func add_vector2i_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
@@ -131,8 +128,8 @@ func add_vector2i_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	var x_value_changed_function := func(value: int):
 		var new_value = Vector2i(value, (parameter.get_value() as Vector2i).y)
 		parameter.set_value(new_value)
-	var p_x_spinbox := add_spinbox(x_value_changed_function, x_start_value, x_spinbox_settings)
-	settings_container.add_child(p_x_spinbox)
+	add_spinbox(x_value_changed_function, x_start_value, x_spinbox_settings)
+
 	
 	settings_container.add_child(Control.new())
 	
@@ -141,8 +138,8 @@ func add_vector2i_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	var y_value_changed_function := func(value: int): 
 		var new_value = Vector2((parameter.get_value() as Vector2i).x, value)
 		parameter.set_value(new_value)
-	var p_y_spinbox := add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
-	settings_container.add_child(p_y_spinbox)
+	add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
+
 
 func add_color_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
