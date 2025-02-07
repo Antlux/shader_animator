@@ -53,81 +53,70 @@ func add_bool_parameter(render_material: ShaderMaterial, p_name: String) -> void
 func add_int_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	add_parameter_label(p_name)
 	
-	var p_spinbox = SpinBox.new()
-	
+	var spinbox_settings: SpinboxSettings = null
 	if hint.size() > 1:
-		p_spinbox.min_value = hint[0].to_float()
-		p_spinbox.max_value = hint[1].to_float()
-		p_spinbox.step = hint[2].to_float()
-	else:
-		p_spinbox.step = 1.0
-		p_spinbox.min_value = -100
-		p_spinbox.max_value = 100
-	p_spinbox.value = render_material.get_shader_parameter(p_name)
+		spinbox_settings = SpinboxSettings.new(hint[0].to_float(), hint[1].to_float(), hint[2].to_float())
+	
+	var start_value : int = render_material.get_shader_parameter(p_name)
+	var value_changed_function := func(value: int): render_material.set_shader_parameter(p_name, value)
+	var p_spinbox = add_spinbox(value_changed_function, start_value, spinbox_settings)
 	settings_container.add_child(p_spinbox)
-	p_spinbox.value_changed.connect(func(value: int): 
-		render_material.set_shader_parameter(p_name, value)
-		)
 
 func add_float_parameter(render_material: ShaderMaterial, p_name: String, hint : PackedStringArray) -> void:
 	add_parameter_label(p_name)
-	var p_spinbox = SpinBox.new()
 	
+	var spinbox_settings: SpinboxSettings = null
 	if hint.size() > 1:
-		p_spinbox.min_value = hint[0].to_float()
-		p_spinbox.max_value = hint[1].to_float()
-		p_spinbox.step = hint[2].to_float()
-	else:
-		p_spinbox.step = 0.01
-	p_spinbox.value = render_material.get_shader_parameter(p_name) if render_material.get_shader_parameter(p_name) != null else 0.0
+		spinbox_settings = SpinboxSettings.new(hint[0].to_float(), hint[1].to_float(), hint[2].to_float())
+	
+	var start_value : float = render_material.get_shader_parameter(p_name)
+	var value_changed_function := func(value: float): render_material.set_shader_parameter(p_name, value)
+	var p_spinbox = add_spinbox(value_changed_function, start_value, spinbox_settings)
+	
 	settings_container.add_child(p_spinbox)
-	p_spinbox.value_changed.connect(func(value: float): 
-		render_material.set_shader_parameter(p_name, value)
-		)
 
 func add_vector2_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
-	var p_x_spinbox := SpinBox.new()
-	var p_y_spinbox := SpinBox.new()
-	p_x_spinbox.value = render_material.get_shader_parameter(p_name).x if render_material.get_shader_parameter(p_name) != null else 0.0
-	p_y_spinbox.value = render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0
-	p_x_spinbox.step = 0.01
-	p_y_spinbox.step = 0.01
-	p_x_spinbox.prefix = "x:"
-	p_y_spinbox.prefix = "y:"
-	settings_container.add_child(p_x_spinbox)
-	settings_container.add_child(Control.new())
-	settings_container.add_child(p_y_spinbox)
-	p_x_spinbox.value_changed.connect(func(value: float):
+	
+	var x_spinbox_settings := SpinboxSettings.new(0, 16384, 0.01, "x:")
+	var x_start_value: float = render_material.get_shader_parameter(p_name).x if render_material.get_shader_parameter(p_name) != null else 0.0
+	var x_value_changed_function := func(value: float):
 		var v = Vector2(value, render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0)
 		render_material.set_shader_parameter(p_name, v)
-		)
-	p_y_spinbox.value_changed.connect(func(value: float): 
+	var p_x_spinbox := add_spinbox(x_value_changed_function, x_start_value, x_spinbox_settings)
+	settings_container.add_child(p_x_spinbox)
+	
+	settings_container.add_child(Control.new())
+	
+	var y_spinbox_settings := SpinboxSettings.new(0, 16384, 0.01, "y:")
+	var y_start_value: float = render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0
+	var y_value_changed_function := func(value: float): 
 		var v = Vector2(render_material.get_shader_parameter(p_name).x if render_material.get_shader_parameter(p_name) != null else 0.0, value)
 		render_material.set_shader_parameter(p_name, v)
-		)
+	var p_y_spinbox := add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
+	settings_container.add_child(p_y_spinbox)
+
 
 func add_vector2i_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
-	var p_x_spinbox := SpinBox.new()
-	var p_y_spinbox := SpinBox.new()
-	p_x_spinbox.value = render_material.get_shader_parameter(p_name).x if render_material.get_shader_parameter(p_name) != null else 0.0
-	p_y_spinbox.value = render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0
-	p_x_spinbox.step = 1.0
-	p_y_spinbox.step = 1.0
-	p_x_spinbox.prefix = "x:"
-	p_y_spinbox.prefix = "y:"
-	settings_container.add_child(p_x_spinbox)
-	settings_container.add_child(Control.new())
-	settings_container.add_child(p_y_spinbox)
-	p_x_spinbox.value_changed.connect(func(value: float):
+	
+	var x_spinbox_settings := SpinboxSettings.new(0, 16384, 1.0, "x:")
+	var x_start_value: int = render_material.get_shader_parameter(p_name).x if render_material.get_shader_parameter(p_name) != null else 0.0
+	var x_value_changed_function := func(value: int):
 		var v = Vector2(value, render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0)
 		render_material.set_shader_parameter(p_name, v)
-		)
-	p_y_spinbox.value_changed.connect(func(value: float): 
+	var p_x_spinbox := add_spinbox(x_value_changed_function, x_start_value, x_spinbox_settings)
+	settings_container.add_child(p_x_spinbox)
+	
+	settings_container.add_child(Control.new())
+	
+	var y_spinbox_settings := SpinboxSettings.new(0, 16384, 1.0, "y:")
+	var y_start_value: int = render_material.get_shader_parameter(p_name).y if render_material.get_shader_parameter(p_name) != null else 0.0
+	var y_value_changed_function := func(value: int): 
 		var v = Vector2(render_material.get_shader_parameter(p_name).x if render_material.get_shader_parameter(p_name) != null else 0.0, value)
 		render_material.set_shader_parameter(p_name, v)
-		)
+	var p_y_spinbox := add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
+	settings_container.add_child(p_y_spinbox)
 
 func add_color_parameter(render_material: ShaderMaterial, p_name: String) -> void:
 	add_parameter_label(p_name)
@@ -154,3 +143,41 @@ func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> v
 
 func _on_render_changed(render_material: ShaderMaterial) -> void:
 	update_shader_settings_UI(render_material)
+
+
+func add_spinbox(value_changed_function: Callable, start_value: float, settings: SpinboxSettings = null) -> SpinBox:
+	var spinbox := SpinBox.new()
+	
+	spinbox.value = start_value
+	
+	if settings:
+		spinbox.min_value = settings.min
+		spinbox.max_value = settings.max
+		spinbox.step = settings.step
+		spinbox.prefix = settings.prefix
+		spinbox.suffix = settings.suffix
+	else:
+		spinbox.min_value = -100
+		spinbox.max_value = 100
+		spinbox.step = 100
+		spinbox.prefix = ""
+		spinbox.suffix = ""
+		
+	spinbox.value_changed.connect(value_changed_function)
+	
+	return spinbox
+
+
+class SpinboxSettings:
+	var step: float
+	var min: float
+	var max: float
+	var prefix: String
+	var suffix: String
+	
+	func _init( _min: float, _max: float, _step: float, _prefix: String = "", _suffix: String = "") -> void:
+		min = _min
+		max = _max
+		step = _step
+		prefix = _prefix
+		suffix = _suffix
