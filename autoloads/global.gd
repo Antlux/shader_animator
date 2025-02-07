@@ -11,15 +11,15 @@ func _ready() -> void:
 	apply_render_settings(Global.render_settings)
 
 func export(captures: Array[Image]) -> void:	
-	var split_path := Global.export_settings.export_path.rsplit(".", true, 1)
+	var split_path := Global.export_settings.export_path.rsplit(".", true, 1) as PackedStringArray
 	var stem := split_path[0]
 	var extension := split_path[1]
 	
 	match export_settings.export_type:
-		ExportSettings.ExportType.WEBP:
-			export_webp(captures)
-		ExportSettings.ExportType.GIF:
-			export_gif(captures)
+		#ExportSettings.ExportType.WEBP:
+			#export_webp(captures)
+		#ExportSettings.ExportType.GIF:
+			#export_gif(captures)
 		ExportSettings.ExportType.EXR: 
 			for idx in captures.size():
 				var capture := captures[idx]
@@ -64,33 +64,54 @@ func export(captures: Array[Image]) -> void:
 				#ExportSettings.ExportType.EXR or ExportSettings.ExportType.JPG or ExportSettings.ExportType.PNG:
 			#pass
 
-func export_webp(captures: Array[Image]) -> void:
-	var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
-	
-	var array : Array[PackedByteArray] = []
-	for capture in captures:
-		capture.convert(Image.FORMAT_RGBA8)
-		array.append(capture.get_data())
-	var width := Global.render_settings.resolution.x
-	var height := Global.render_settings.resolution.y
-	var path := Global.export_settings.export_path + ".webp"
-	
-	var error := AnimationExporter.export_webp(path, width, height, frame_delay, array) as Error
-	assert(error == OK, "Webp export failed with code: %s" % error)
+#func export_webp(captures: Array[Image]) -> void:
+	#var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
+	#
+	#var array : Array[PackedByteArray] = []
+	#for capture in captures:
+		#capture.convert(Image.FORMAT_RGBA8)
+		#array.append(capture.get_data())
+	#var width := Global.render_settings.resolution.x
+	#var height := Global.render_settings.resolution.y
+	#var path := Global.export_settings.export_path + ".webp"
+	#
+	#var error := AnimationExporter.export_webp(path, width, height, frame_delay, array) as Error
+	#assert(error == OK, "Webp export failed with code: %s" % error)
 
-func export_gif(captures: Array[Image]) -> void:
-	var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
+#func export_gif(captures: Array[Image]) -> void:
+	#var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
+	#
+	#var array : Array[PackedByteArray] = []
+	#for capture in captures:
+		#capture.convert(Image.FORMAT_RGBA8)
+		#array.append(capture.get_data())
+	#var width := Global.render_settings.resolution.x
+	#var height := Global.render_settings.resolution.y
+	#var path := Global.export_settings.export_path + ".gif"
+	#
+	#var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
+	#assert(error == OK, "GIF export failed with code: %s" % error)
+
+func export_web(captures: Array[Image]) -> void:
+	var writer := ZIPPacker.new()
+	writer.open("user://export.zip")
+	var extension := (ExportSettings.ExportType.keys()[export_settings.export_type] as String).to_lower()
+	for i in captures.size():
+		var capture := captures[i]
+		
+		writer.start_file("export-%s.%s" % [i, extension])
+		
+		match export_settings.export_type:
+			ExportSettings.ExportType.PNG:
+				writer.write_file(capture.save_png_to_buffer())
+			ExportSettings.ExportType.JPG:
+				writer.write_file(capture.save_jpg_to_buffer())
+		
+		writer.close_file()
+	writer.close()
+	var file := FileAccess.open("user://export.zip", FileAccess.READ)
+	JavaScriptBridge.download_buffer(file.get_buffer(file.get_length()), "export.zip", "zip")
 	
-	var array : Array[PackedByteArray] = []
-	for capture in captures:
-		capture.convert(Image.FORMAT_RGBA8)
-		array.append(capture.get_data())
-	var width := Global.render_settings.resolution.x
-	var height := Global.render_settings.resolution.y
-	var path := Global.export_settings.export_path + ".gif"
-	
-	var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
-	assert(error == OK, "GIF export failed with code: %s" % error)
 
 
 func _on_export_settings_changed() -> void:
