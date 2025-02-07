@@ -10,7 +10,8 @@ func _ready() -> void:
 	render_settings.changed.connect(_on_render_settings_changed)
 	apply_render_settings(Global.render_settings)
 
-func export(captures: Array[Image]) -> void:	
+
+func export(captures: Array[Image]) -> void:
 	var split_path := Global.export_settings.export_path.rsplit(".", true, 1) as PackedStringArray
 	var stem := split_path[0]
 	var extension := split_path[1]
@@ -113,7 +114,6 @@ func export_web(captures: Array[Image]) -> void:
 	writer.close()
 	var file := FileAccess.open("user://export.zip", FileAccess.READ)
 	JavaScriptBridge.download_buffer(file.get_buffer(file.get_length()), "export.zip", "zip")
-	
 
 
 func _on_export_settings_changed() -> void:

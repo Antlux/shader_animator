@@ -16,6 +16,8 @@ func _ready() -> void:
 	
 	Global.export_settings.changed.connect(_on_export_settings_changed)
 	Global.render_settings.changed.connect(_on_render_settings_changed)
+	Render.started_rendering.connect(_on_started_rendering)
+	Render.ended_rendering.connect(_on_ended_rendering)
 
 
 func update_values() -> void:
@@ -47,3 +49,16 @@ func _on_duration_changed(value: float) -> void:
 
 func _on_frame_count_changed(value: float) -> void:
 	Global.render_settings.frame_count = value
+
+
+func _on_started_rendering() -> void:
+	resolution_x_spin_box.editable = false
+	resolution_y_spin_box.editable = false
+	duration_spinbox.editable = false
+	frame_count_spin_box.editable = false
+
+func _on_ended_rendering() -> void:
+	resolution_x_spin_box.editable = true
+	resolution_y_spin_box.editable = true
+	duration_spinbox.editable = true
+	frame_count_spin_box.editable = true

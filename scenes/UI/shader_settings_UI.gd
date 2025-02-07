@@ -5,10 +5,13 @@ extends PanelContainer
 
 func _ready() -> void:
 	Render.changed.connect(_on_render_changed)
-	_on_render_changed(Render.render_material)
+	Render.started_rendering.connect(_on_started_rendering)
+	Render.ended_rendering.connect(_on_ended_rendering)
+	
+	update_shader_settings_UI()
 
 
-func update_shader_settings_UI(_render_material: ShaderMaterial) -> void:
+func update_shader_settings_UI() -> void:
 	for c in settings_container.get_children():
 		c.queue_free()
 	
@@ -162,9 +165,23 @@ func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> v
 	texture_file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	texture_file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 
-func _on_render_changed(render_material: ShaderMaterial) -> void:
-	update_shader_settings_UI(render_material)
 
+func _on_render_changed(_render_material: ShaderMaterial) -> void:
+	update_shader_settings_UI()
+
+func _on_started_rendering() -> void:
+	for child in settings_container.get_children():
+		if child.get("disabled") != null:
+			child.disabled = true
+		if child.get("editable") != null:
+			child.editable = false
+
+func _on_ended_rendering() -> void:
+	for child in settings_container.get_children():
+		if child.get("disabled") != null:
+			child.disabled = false
+		if child.get("editable") != null:
+			child.editable = true
 
 class SpinboxSettings:
 	var step: float

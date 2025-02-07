@@ -1,6 +1,7 @@
 extends SubViewport
 
 func _ready() -> void:
+	Render.render_viewport = self
 	Render.resized.connect(_on_render_resized)
 	size = Render.size
 
