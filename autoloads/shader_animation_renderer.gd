@@ -51,11 +51,14 @@ func _process(delta: float) -> void:
 
 
 func change_shader_animation(to: ShaderAnimation) -> void:
-	if shader_animation and shader_animation.shader_parameter_changed.is_connected(_on_shader_parameter_changed):
-		shader_animation.shader_parameter_changed.disconnect(_on_shader_parameter_changed)
-		
+	if shader_animation:
+		if shader_animation.shader_parameter_changed.is_connected(_on_shader_parameter_changed):
+			shader_animation.shader_parameter_changed.disconnect(_on_shader_parameter_changed)
+	
 	shader_animation = to
-	shader_animation.shader_parameter_changed.connect(_on_shader_parameter_changed)
+	
+	if shader_animation:
+		shader_animation.shader_parameter_changed.connect(_on_shader_parameter_changed)
 	
 	shader_animation_changed.emit(shader_animation)
 

@@ -16,6 +16,9 @@ func update_shader_settings_UI() -> void:
 	for c in settings_container.get_children():
 		c.queue_free()
 	
+	if ShaderAnimationRenderer.shader_animation == null:
+		return
+	
 	for parameter in ShaderAnimationRenderer.shader_animation.get_parameters():
 		
 		match parameter.type:
@@ -45,8 +48,8 @@ func add_spinbox(value_changed_function: Callable, value: float, settings: Spinb
 	var spinbox := SpinBox.new()
 	
 	if settings:
-		spinbox.min_value = settings.min
-		spinbox.max_value = settings.max
+		spinbox.min_value = settings.min_value
+		spinbox.max_value = settings.max_value
 		spinbox.step = settings.step
 		spinbox.prefix = settings.prefix
 		spinbox.suffix = settings.suffix
@@ -182,14 +185,14 @@ func _on_ended_rendering() -> void:
 
 class SpinboxSettings:
 	var step: float
-	var min: float
-	var max: float
+	var min_value: float
+	var max_value: float
 	var prefix: String
 	var suffix: String
 	
-	func _init( _min: float, _max: float, _step: float, _prefix: String = "", _suffix: String = "") -> void:
-		min = _min
-		max = _max
+	func _init( _min_value: float, _max_value: float, _step: float, _prefix: String = "", _suffix: String = "") -> void:
+		min_value = _min_value
+		max_value = _max_value
 		step = _step
 		prefix = _prefix
 		suffix = _suffix

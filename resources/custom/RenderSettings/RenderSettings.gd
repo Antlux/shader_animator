@@ -6,9 +6,9 @@ const PATH := "user://render_settings.tres"
 	set(value):
 		duration = maxf(0, value)
 		emit_changed()
-@export var frame_count: float = 30.0:
+@export var frame_count: int = 30:
 	set(value):
-		frame_count = maxf(1, value)
+		frame_count = maxi(1, value)
 		emit_changed()
 @export var resolution: Vector2i = Vector2i(512, 512):
 	set(value):

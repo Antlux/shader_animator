@@ -11,10 +11,14 @@ func _ready() -> void:
 
 
 func _on_shader_animation_changed(shader_animation: ShaderAnimation) -> void:
-	text = shader_animation.shader_material.shader.code
+	if shader_animation:
+		text = shader_animation.shader_material.shader.code
+	else:
+		text = ""
 
 func _on_text_changed() -> void:
-	ShaderAnimationRenderer.shader_animation.shader_material.shader.code = text
+	if ShaderAnimationRenderer.shader_animation:
+		ShaderAnimationRenderer.shader_animation.shader_material.shader.code = text
 
 func _on_started_rendering() -> void:
 	editable = false

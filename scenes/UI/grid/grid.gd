@@ -1,6 +1,6 @@
 class_name Grid extends Control
 
-@export var font: FontFile
+@export var unit_font: FontFile
 
 @export var render_view: RenderView
 
@@ -57,32 +57,32 @@ func _draw() -> void:
 	)
 	
 	for x in range(snappedi(vmin.x, rate), snappedi(vmax.x + rate, rate), rate):
-		var unit_rect := Rect2() 
+		var x_unit_rect := Rect2() 
 		
 		if draw_grid_units:
 			var unit_text := "%s" % x
-			unit_rect = get_string_rect(unit_text, font, 16)
-			font.draw_string(surface, Vector2(x, vmin.y) * zoom + Vector2(-unit_rect.size.x / 2.0, unit_rect.size.y), unit_text)
+			x_unit_rect = get_string_rect(unit_text, unit_font, 16)
+			unit_font.draw_string(surface, Vector2(x, vmin.y) * zoom + Vector2(-x_unit_rect.size.x / 2.0, x_unit_rect.size.y), unit_text)
 		
 		if draw_grid_lines:
-			draw_vertical_line(Vector2(x, vmin.y) * zoom, Vector2(x, vmax.y) * zoom, unit_rect.size.y)
+			draw_vertical_line(Vector2(x, vmin.y) * zoom, Vector2(x, vmax.y) * zoom, x_unit_rect.size.y)
 		
 	for y in range(snappedi(vmin.y, rate), snappedi(vmax.y + rate, rate), rate):
-		var unit_rect := Rect2() 
+		var y_unit_rect := Rect2() 
 		if draw_grid_units:
 			var unit_text := "%s" % y 
-			unit_rect = get_string_rect(unit_text, font , 16)
-			var pos := Vector2(vmin.x, y) * zoom + Vector2.UP * (unit_rect.size.y / 2.0)
-			font.draw_string(surface, pos + Vector2.DOWN * unit_rect.size.y, unit_text)
+			y_unit_rect = get_string_rect(unit_text, unit_font , 16)
+			var pos := Vector2(vmin.x, y) * zoom + Vector2.UP * (y_unit_rect.size.y / 2.0)
+			unit_font.draw_string(surface, pos + Vector2.DOWN * y_unit_rect.size.y, unit_text)
 		
 		if draw_grid_lines:
-			draw_horizontal_line(Vector2(vmin.x, y) * zoom, Vector2(vmax.x, y) * zoom, unit_rect.size)
+			draw_horizontal_line(Vector2(vmin.x, y) * zoom, Vector2(vmax.x, y) * zoom, y_unit_rect.size)
 	
 	
 	var unit_rect := Rect2()
 	if draw_grid_units:
 		var unit_text := "%s" % 0
-		unit_rect = get_string_rect(unit_text, font, 16)
+		unit_rect = get_string_rect(unit_text, unit_font, 16)
 	
 	if draw_x_axis:
 		draw_horizontal_line(Vector2(vmin.x, 0) * zoom.x, Vector2(vmax.x, 0) * zoom.x, unit_rect.size, x_axis_color, 2.0, 3.0)
@@ -91,13 +91,13 @@ func _draw() -> void:
 		draw_vertical_line(Vector2(0, vmin.y) * zoom, Vector2(0, vmax.y) * zoom, unit_rect.size.y, y_axis_color, 2.0, 3.0)
 
 
-func draw_horizontal_line(start: Vector2, end: Vector2, unit_rect_size: Vector2, color := grid_line_color, width := 1, radius:= 2.0) -> void:
+func draw_horizontal_line(start: Vector2, end: Vector2, unit_rect_size: Vector2, color := grid_line_color, width := 1.0, radius:= 2.0) -> void:
 	var line_start := start + Vector2.RIGHT * (unit_rect_size.x + padding.x + radius)
 	var line_end := end
 	RenderingServer.canvas_item_add_line(surface, line_start, line_end, color, width)
 	RenderingServer.canvas_item_add_circle(surface, line_start, radius, color)
 
-func draw_vertical_line(start: Vector2, end: Vector2, unit_rect_size_y: float, color := grid_line_color, width := 1, radius:= 2.0) -> void:
+func draw_vertical_line(start: Vector2, end: Vector2, unit_rect_size_y: float, color := grid_line_color, width := 1.0, radius:= 2.0) -> void:
 	var line_start := start + Vector2.DOWN * (unit_rect_size_y + padding.y + radius)
 	var line_end := end
 	RenderingServer.canvas_item_add_line(surface, line_start, line_end, color, width)
@@ -126,7 +126,7 @@ func get_string_rect(text: String, font: Font, font_size: int) -> Rect2:
 		var glyph_offset := text_server.font_get_glyph_offset(glyph_font_rid, glyph_font_size, glyph_index)
 		var glyph_advance: int = glyph.get('advance', 0)
 		var glyph_size := text_server.font_get_glyph_size(glyph_font_rid, glyph_font_size, glyph_index)
-		glyph_size.x -= maxi(0, glyph_size.x - glyph_advance)
+		glyph_size.x -= maxf(0, glyph_size.x - glyph_advance)
 		var glyph_rect := Rect2(Vector2(x, ascent) + glyph_offset, glyph_size)
 		if glyph_rect.has_area():
 			rects.append(glyph_rect)

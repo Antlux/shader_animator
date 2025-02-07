@@ -1,25 +1,56 @@
 extends OptionButton
 
 func _ready() -> void:
+	Global.shader_animation_list_updated.connect(_on_shader_animation_list_updated)
+	
 	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
 	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 	
-	setup()
-	item_selected.connect(_on_item_selected)
-	select(0)
+	update_list()
 	
-	select_shader(0)
+	item_selected.connect(_on_item_selected)
+	
+	if Global.shader_animation_list.size() > 0:
+		select(0)
+		select_shader(0)
 
 
-func setup() -> void:
-	for shader_animation in Global.shader_animations:
-		add_icon_item(shader_animation.get_texture(Vector2i(64, 64)), shader_animation.name)
+func update_list() -> void:	
+	clear()
+
+	for anim_idx in Global.shader_animation_list.size():
+		add_icon_item(Global.shader_animation_list[anim_idx].get_texture(Vector2i(64, 64)), Global.shader_animation_list[anim_idx].name)
+
 
 func select_shader(idx: int) -> void:
-	ShaderAnimationRenderer.change_shader_animation(Global.shader_animations[idx])
+	idx = clampi(idx, -1, Global.shader_animation_list.size() - 1)
+	
+	if idx < 0:
+		ShaderAnimationRenderer.change_shader_animation(null)
+		return
+	
+	ShaderAnimationRenderer.change_shader_animation(Global.shader_animation_list[idx])
 
 
-func _on_item_selected(idx: int) -> void:
+func _on_shader_animation_list_updated() -> void:
+	var idx := selected
+	
+	update_list()
+	
+	var count := Global.shader_animation_list.size()
+	
+	print(count)
+	
+	if count > 0:
+		idx = maxi(0, idx - 1)
+	else:
+		idx = maxi(-1, idx - 1)
+	
+	
+	
+	print(idx)
+	
+	select(idx)
 	select_shader(idx)
 
 func _on_started_rendering() -> void:
@@ -27,3 +58,6 @@ func _on_started_rendering() -> void:
 
 func _on_ended_rendering() -> void:
 	disabled = false
+
+func _on_item_selected(idx: int) -> void:
+	select_shader(idx)

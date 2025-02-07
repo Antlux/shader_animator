@@ -1,14 +1,24 @@
 extends Node
 
+signal shader_animation_list_updated
+
+const FONT_DRIP: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/font_drip.tres")
+const FONT_FLOW: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/font_flow.tres")
+const FONT_SPIRAL: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/font_spiral.tres")
+
 @onready var export_settings := ExportSettings.load_or_create()
 @onready var render_settings := RenderSettings.load_or_create()
-@onready var shader_animations: Array[ShaderAnimation] = load_shader_animations()
 
+var shader_animation_list: Array[ShaderAnimation] = []
 var current_time: float = 0.0
 
 func _ready() -> void:
 	export_settings.changed.connect(_on_export_settings_changed)
 	render_settings.changed.connect(_on_render_settings_changed)
+	
+	shader_animation_list = load_shader_animations()
+	shader_animation_list_updated.emit()
+	
 	apply_render_settings(Global.render_settings)
 
 
@@ -22,14 +32,39 @@ func load_shader_animations() -> Array[ShaderAnimation]:
 		var anim := ShaderAnimation.load_animation("user://shader_animations/" + path)
 		if anim:
 			arr.append(anim)
-			print(path)
 	
 	return arr
+
+func add_shader_animation(animation_name: String) -> void:
+	if not animation_name.is_empty():
+		var new_animation := ShaderAnimation.create(animation_name)
+		shader_animation_list.append(new_animation)
+		shader_animation_list_updated.emit()
+
+func remove_shader_animation(shader_animation: ShaderAnimation) -> void:
+	shader_animation.remove_from_system()
+	shader_animation_list.erase(shader_animation)
+	shader_animation_list_updated.emit()
+
+func reset_shader_animations() -> void:
+	var list: Array[ShaderAnimation] = [
+		FONT_DRIP, 
+		FONT_FLOW, 
+		FONT_SPIRAL
+	]
+	
+	for shader_animation in list:
+		shader_animation.save()
+	
+	shader_animation_list = load_shader_animations()
+	
+	shader_animation_list_updated.emit()
 
 func apply_render_settings(settings: RenderSettings) -> void:
 	ShaderAnimationRenderer.size = settings.resolution
 	ShaderAnimationRenderer.duration = settings.duration
 	ShaderAnimationRenderer.frame_count = settings.frame_count
+
 
 func export(captures: Array[Image]) -> void:
 	var split_path := Global.export_settings.export_path.rsplit(".", true, 1) as PackedStringArray

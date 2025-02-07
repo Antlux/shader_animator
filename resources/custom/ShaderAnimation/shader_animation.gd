@@ -38,13 +38,11 @@ func get_texture(texture_size: Vector2i) -> ViewportTexture:
 	
 	return sub_viewport.get_texture()
 
-
 func generate_parameters_dict() -> Dictionary:
 	var param_dict := {}
 	for param in get_parameters():
 		param_dict[param.name] = param.get_value()
 	return param_dict
-
 
 func apply_parameters_dict() -> void:
 	for idx in parameters_dict.size():
@@ -52,6 +50,40 @@ func apply_parameters_dict() -> void:
 		var param_value : Variant = parameters_dict.values()[idx]
 		shader_material.set_shader_parameter(param_name, param_value)
 
+func save() -> Error:
+	parameters_dict = generate_parameters_dict()
+	var user_absolute_path := OS.get_user_data_dir()
+	
+	if not DirAccess.open("user://shader_animations/"):
+		var mkdir_err := DirAccess.make_dir_absolute(user_absolute_path + "/shader_animations/")
+		if not mkdir_err == OK:
+			assert(mkdir_err == OK, "Could not create dir: %s" % mkdir_err)
+			return mkdir_err
+	
+	var path := "user://shader_animations/%s.tres" % self.name.replace(" ", "_").to_lower().strip_edges()
+	print("saving %s -> %s" % [self.name, name])
+	var save_error := ResourceSaver.save(self, path)
+	if not save_error == OK:
+		assert(save_error == OK, "Could not save shader animation: %s" % save_error)
+		return save_error
+	
+	return OK
+
+func remove_from_system() -> Error:
+	if FileAccess.file_exists(resource_path):
+		var split_path := resource_path.rsplit("/", true, 1)
+		var dir := DirAccess.open(split_path[0] + "/")
+		if dir:
+			dir.remove(split_path[1])
+	return OK
+
+
+static func create(animation_name: String) -> ShaderAnimation:
+	var new_animation := ShaderAnimation.new()
+	new_animation.name = animation_name
+	new_animation.shader_material = ShaderMaterial.new()
+	new_animation.shader_material.shader = Shader.new()
+	return new_animation
 
 static func load_animation(path: String) -> ShaderAnimation:
 	if ResourceLoader.exists(path, "ShaderAnimation"):
@@ -60,17 +92,6 @@ static func load_animation(path: String) -> ShaderAnimation:
 		return anim
 	return null
 
-func save() -> void:
-	parameters_dict = generate_parameters_dict()
-	var user_absolute_path := OS.get_user_data_dir()
-	if not DirAccess.open("user://shader_animations/"):
-		var mkdir_err := DirAccess.make_dir_absolute(user_absolute_path + "/shader_animations/")
-		assert(mkdir_err == OK, "Could not create dir: %s" % mkdir_err)
-	
-	print("Saving animation")
-	
-	var save_error := ResourceSaver.save(self, "user://shader_animations/%s.tres" % self.name.replace(" ", "_").to_lower().strip_edges())
-	assert(save_error == OK, "Could not save shader animation: %s" % save_error)
 
 
 
@@ -94,6 +115,5 @@ class Parameter:
 	
 	## Returns the value of pointed parameter of the active render material.
 	func get_value() -> Variant:
-		print(self.name + ": %s" % shader_animation.shader_material.get_shader_parameter(name))
 		return shader_animation.shader_material.get_shader_parameter(name)
 	

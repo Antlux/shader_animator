@@ -1,7 +1,5 @@
 extends MenuButton
 
-@export var grid: Grid
-
 enum GridElements {
 	X_AXIS,
 	Y_AXIS,
@@ -9,9 +7,13 @@ enum GridElements {
 	GRID_UNITS,
 }
 
+@export var grid: Grid
+
+
 func _ready() -> void:
 	setup()
 	get_popup().index_pressed.connect(_on_index_pressed)
+
 
 func setup() -> void:
 	for idx in GridElements.size():
@@ -32,17 +34,16 @@ func is_element_drawn(element: GridElements) -> bool:
 			return grid.draw_grid_units
 	return false
 
-func set_element_drawn(element: GridElements, draw: bool) -> void:
+func set_element_drawn(element: GridElements, toggle: bool) -> void:
 	match element:
 		GridElements.X_AXIS:
-			grid.draw_x_axis = draw
+			grid.draw_x_axis = toggle
 		GridElements.Y_AXIS:
-			grid.draw_y_axis = draw
+			grid.draw_y_axis = toggle
 		GridElements.GRID_LINES:
-			grid.draw_grid_lines = draw
+			grid.draw_grid_lines = toggle
 		GridElements.GRID_UNITS:
-			grid.draw_grid_units = draw
-	
+			grid.draw_grid_units = toggle
 
 
 func _on_index_pressed(idx: int) -> void:
@@ -50,6 +51,3 @@ func _on_index_pressed(idx: int) -> void:
 	var current := get_popup().is_item_checked(idx)
 	set_element_drawn(id, !current)
 	get_popup().set_item_checked(idx, is_element_drawn(id))
-	
-	
-	

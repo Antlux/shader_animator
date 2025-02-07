@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://kdnvs0cs0awl"]
+[gd_scene load_steps=22 format=3 uid="uid://kdnvs0cs0awl"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_oq0dg"]
 [ext_resource type="Script" path="res://scenes/render_scene/render_sub_viewport.gd" id="2_hy4vp"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://scenes/UI/render_progress_bar.gd" id="7_6g34h"]
 [ext_resource type="Script" path="res://scenes/UI/view_menu_button.gd" id="7_ctqjo"]
 [ext_resource type="Script" path="res://scenes/UI/shader_settings_UI.gd" id="11_r3m6x"]
+[ext_resource type="Script" path="res://scenes/UI/shader_menu_button.gd" id="12_eista"]
 [ext_resource type="Script" path="res://scenes/UI/render_settings_UI.gd" id="13_owcuf"]
 [ext_resource type="Script" path="res://scenes/UI/export_settings_UI.gd" id="19_xdycj"]
 
@@ -127,7 +128,7 @@ texture = SubResource("ViewportTexture_af6fd")
 stretch_mode = 2
 
 [node name="Grid" parent="UI/MarginContainer/GridContainer/VSplitContainer/VBoxContainer/Control/RenderView/SubViewport" node_paths=PackedStringArray("render_view", "camera") instance=ExtResource("6_akf6h")]
-font = ExtResource("7_1mb6g")
+unit_font = ExtResource("7_1mb6g")
 render_view = NodePath("../..")
 camera = NodePath("../RenderCamera")
 padding = Vector2(8, 8)
@@ -180,9 +181,37 @@ script = ExtResource("6_yayyj")
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ShaderOptionButton" type="OptionButton" parent="UI/MarginContainer/GridContainer/VBoxContainer"]
+[node name="ShaderSelectionOptionButton" type="OptionButton" parent="UI/MarginContainer/GridContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 script = ExtResource("5_0enrd")
+
+[node name="ShaderActionMenuButton" type="MenuButton" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("import_file_dialog", "export_file_dialog", "deletion_confirmation_dialog")]
+layout_mode = 2
+text = "Action"
+flat = false
+script = ExtResource("12_eista")
+import_file_dialog = NodePath("ImportFileDialog")
+export_file_dialog = NodePath("ExportFileDialog")
+deletion_confirmation_dialog = NodePath("DeletionConfirmationDialog")
+
+[node name="ImportFileDialog" type="FileDialog" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton"]
+auto_translate_mode = 1
+title = "Open File(s)"
+initial_position = 2
+size = Vector2i(500, 500)
+ok_button_text = "Open"
+file_mode = 1
+access = 2
+
+[node name="ExportFileDialog" type="FileDialog" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton"]
+initial_position = 2
+size = Vector2i(500, 500)
+access = 2
+
+[node name="DeletionConfirmationDialog" type="ConfirmationDialog" parent="UI/MarginContainer/GridContainer/VBoxContainer/ShaderActionMenuButton"]
+initial_position = 2
+dialog_text = "Are you sure?"
 
 [node name="ShaderSettings" type="PanelContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("settings_container")]
 layout_mode = 2

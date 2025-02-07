@@ -12,13 +12,13 @@ func _ready() -> void:
 
 
 func _on_export_pressed() -> void:
-	var extension := (ExportSettings.ExportType.keys()[Global.export_settings.export_type] as String).to_lower()
-	file_dialog.current_dir = Global.export_settings.export_path.rsplit("/", true, 1)[0]
+	file_dialog.current_dir = Global.export_settings.export_path
 	
 	if OS.has_feature("web"):
 		Global.export_web(await ShaderAnimationRenderer.render_frames())
 		return
 	
+	var extension := (ExportSettings.ExportType.keys()[Global.export_settings.export_type] as String).to_lower()
 	file_dialog.clear_filters()
 	file_dialog.add_filter("*." + extension, "animation")
 	file_dialog.show()
