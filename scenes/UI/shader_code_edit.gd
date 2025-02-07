@@ -4,17 +4,17 @@ var auto_update := true
 
 
 func _ready() -> void:
-	Render.changed.connect(_on_render_changed)
-	Render.started_rendering.connect(_on_started_rendering)
-	Render.ended_rendering.connect(_on_ended_rendering)
+	ShaderAnimationRenderer.shader_animation_changed.connect(_on_shader_animation_changed)
+	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
+	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 	text_changed.connect(_on_text_changed)
 
 
-func _on_render_changed(render_material: ShaderMaterial) -> void:
-	text = render_material.shader.code
+func _on_shader_animation_changed(shader_animation: ShaderAnimation) -> void:
+	text = shader_animation.shader_material.shader.code
 
 func _on_text_changed() -> void:
-	Render.render_material.shader.code = text
+	ShaderAnimationRenderer.shader_animation.shader_material.shader.code = text
 
 func _on_started_rendering() -> void:
 	editable = false

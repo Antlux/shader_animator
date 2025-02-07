@@ -16,7 +16,7 @@ func _on_export_pressed() -> void:
 	file_dialog.current_dir = Global.export_settings.export_path.rsplit("/", true, 1)[0]
 	
 	if OS.has_feature("web"):
-		Global.export_web(await Render.render_frames())
+		Global.export_web(await ShaderAnimationRenderer.render_frames())
 		return
 	
 	file_dialog.clear_filters()
@@ -30,4 +30,4 @@ func _on_file_selected(dir_path: String) -> void:
 	Global.export_settings.export_path = dir_path
 	
 
-	Global.export(await Render.render_frames())
+	Global.export(await ShaderAnimationRenderer.render_frames())

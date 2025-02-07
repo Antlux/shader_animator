@@ -65,34 +65,6 @@ func export(captures: Array[Image]) -> void:
 				#ExportSettings.ExportType.EXR or ExportSettings.ExportType.JPG or ExportSettings.ExportType.PNG:
 			#pass
 
-#func export_webp(captures: Array[Image]) -> void:
-	#var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
-	#
-	#var array : Array[PackedByteArray] = []
-	#for capture in captures:
-		#capture.convert(Image.FORMAT_RGBA8)
-		#array.append(capture.get_data())
-	#var width := Global.render_settings.resolution.x
-	#var height := Global.render_settings.resolution.y
-	#var path := Global.export_settings.export_path + ".webp"
-	#
-	#var error := AnimationExporter.export_webp(path, width, height, frame_delay, array) as Error
-	#assert(error == OK, "Webp export failed with code: %s" % error)
-
-#func export_gif(captures: Array[Image]) -> void:
-	#var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
-	#
-	#var array : Array[PackedByteArray] = []
-	#for capture in captures:
-		#capture.convert(Image.FORMAT_RGBA8)
-		#array.append(capture.get_data())
-	#var width := Global.render_settings.resolution.x
-	#var height := Global.render_settings.resolution.y
-	#var path := Global.export_settings.export_path + ".gif"
-	#
-	#var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
-	#assert(error == OK, "GIF export failed with code: %s" % error)
-
 func export_web(captures: Array[Image]) -> void:
 	var writer := ZIPPacker.new()
 	writer.open("user://export.zip")
@@ -125,6 +97,35 @@ func _on_render_settings_changed() -> void:
 
 
 func apply_render_settings(settings: RenderSettings) -> void:
-	Render.size = settings.resolution
-	Render.duration = settings.duration
-	Render.frame_count = settings.frame_count
+	ShaderAnimationRenderer.size = settings.resolution
+	ShaderAnimationRenderer.duration = settings.duration
+	ShaderAnimationRenderer.frame_count = settings.frame_count
+
+
+#func export_webp(captures: Array[Image]) -> void:
+	#var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
+	#
+	#var array : Array[PackedByteArray] = []
+	#for capture in captures:
+		#capture.convert(Image.FORMAT_RGBA8)
+		#array.append(capture.get_data())
+	#var width := Global.render_settings.resolution.x
+	#var height := Global.render_settings.resolution.y
+	#var path := Global.export_settings.export_path + ".webp"
+	#
+	#var error := AnimationExporter.export_webp(path, width, height, frame_delay, array) as Error
+	#assert(error == OK, "Webp export failed with code: %s" % error)
+
+#func export_gif(captures: Array[Image]) -> void:
+	#var frame_delay := Global.render_settings.duration / Global.render_settings.frame_count
+	#
+	#var array : Array[PackedByteArray] = []
+	#for capture in captures:
+		#capture.convert(Image.FORMAT_RGBA8)
+		#array.append(capture.get_data())
+	#var width := Global.render_settings.resolution.x
+	#var height := Global.render_settings.resolution.y
+	#var path := Global.export_settings.export_path + ".gif"
+	#
+	#var error := AnimationExporter.export_gif(path, width, height, frame_delay, array) as Error
+	#assert(error == OK, "GIF export failed with code: %s" % error)

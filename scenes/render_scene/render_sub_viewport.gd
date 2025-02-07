@@ -1,9 +1,9 @@
 extends SubViewport
 
 func _ready() -> void:
-	Render.render_viewport = self
-	Render.resized.connect(_on_render_resized)
-	size = Render.size
+	ShaderAnimationRenderer.render_viewport = self
+	ShaderAnimationRenderer.resized.connect(_on_render_resized)
+	size = ShaderAnimationRenderer.size
 
 func update_size(new_size: Vector2i) -> void:
 	size = new_size

@@ -16,8 +16,8 @@ func _ready() -> void:
 	
 	Global.export_settings.changed.connect(_on_export_settings_changed)
 	Global.render_settings.changed.connect(_on_render_settings_changed)
-	Render.started_rendering.connect(_on_started_rendering)
-	Render.ended_rendering.connect(_on_ended_rendering)
+	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
+	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 
 
 func update_values() -> void:

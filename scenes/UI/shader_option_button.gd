@@ -2,12 +2,12 @@ extends OptionButton
 
 const SHADER_FACES_PATH := "res://resources/custom/ShaderFace/shader_faces/"
 
-@export var shader_faces : Array[ShaderFace] = []
+@export var shader_animations : Array[ShaderAnimation] = []
 
 
 func _ready() -> void:
-	Render.started_rendering.connect(_on_started_rendering)
-	Render.ended_rendering.connect(_on_ended_rendering)
+	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
+	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 	
 	setup()
 	item_selected.connect(_on_item_selected)
@@ -16,12 +16,11 @@ func _ready() -> void:
 
 
 func setup() -> void:
-	for idx in shader_faces.size():
-		add_item(shader_faces[idx].name, idx)
+	for shader_animation in shader_animations:
+		add_icon_item(shader_animation.get_texture(Vector2i(64, 64)), shader_animation.name)
 
 func select_shader(idx: int) -> void:
-	var shader_material = shader_faces[idx].shader_material
-	Render.render_material = shader_material
+	ShaderAnimationRenderer.shader_animation = shader_animations[idx]
 
 
 func _on_item_selected(idx: int) -> void:

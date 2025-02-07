@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ShaderFace" load_steps=3 format=3 uid="uid://c8pq1qkpqp2mp"]
 
-[ext_resource type="Script" path="res://resources/custom/ShaderFace/ShaderFace.gd" id="1_6hdtn"]
+[ext_resource type="Script" path="res://resources/custom/ShaderAnimation/shader_animation.gd" id="1_6hdtn"]
 [ext_resource type="Material" uid="uid://bxxjmxuvx0bv1" path="res://resources/materials/shader_materials/canvas/font_flow/font_flow.tres" id="2_ksfts"]
 
 [resource]

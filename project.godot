@@ -21,7 +21,7 @@ config/windows_native_icon="res://icon.ico"
 [autoload]
 
 Global="*res://autoloads/global.gd"
-Render="*res://autoloads/render.gd"
+ShaderAnimationRenderer="*res://autoloads/shader_animation_renderer.gd"
 
 [input]
 

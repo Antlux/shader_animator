@@ -4,9 +4,9 @@ extends PanelContainer
 
 
 func _ready() -> void:
-	Render.changed.connect(_on_render_changed)
-	Render.started_rendering.connect(_on_started_rendering)
-	Render.ended_rendering.connect(_on_ended_rendering)
+	ShaderAnimationRenderer.shader_animation_changed.connect(_on_shader_animation_changed)
+	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
+	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 	
 	update_shader_settings_UI()
 
@@ -15,7 +15,7 @@ func update_shader_settings_UI() -> void:
 	for c in settings_container.get_children():
 		c.queue_free()
 	
-	for parameter in Render.get_parameters():
+	for parameter in ShaderAnimationRenderer.shader_animation.get_parameters():
 		
 		match parameter.type:
 			TYPE_BOOL:
@@ -62,13 +62,13 @@ func add_spinbox(value_changed_function: Callable, start_value: float, settings:
 	
 	return spinbox
 
-func add_bool_parameter(parameter: Render.Parameter) -> void:
+func add_bool_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
 	var parameter_checkbox := CheckBox.new()
 	parameter_checkbox.button_pressed = parameter.get_value()
 	parameter_checkbox.toggled.connect(func(toggle: bool): parameter.set_value(toggle))
 
-func add_int_parameter(parameter: Render.Parameter) -> void:
+func add_int_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
 	
 	var spinbox_settings : SpinboxSettings = null
@@ -85,7 +85,7 @@ func add_int_parameter(parameter: Render.Parameter) -> void:
 	
 	settings_container.add_child(p_spinbox)
 
-func add_float_parameter(parameter: Render.Parameter) -> void:
+func add_float_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
 	
 	var spinbox_settings := SpinboxSettings.new(-100, 100, 0.01) 
@@ -102,7 +102,7 @@ func add_float_parameter(parameter: Render.Parameter) -> void:
 	
 	settings_container.add_child(p_spinbox)
 
-func add_vector2_parameter(parameter: Render.Parameter) -> void:
+func add_vector2_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
 	
 	var x_spinbox_settings := SpinboxSettings.new(-16384, 16384, .01, "x:")
@@ -123,7 +123,7 @@ func add_vector2_parameter(parameter: Render.Parameter) -> void:
 	var p_y_spinbox := add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
 	settings_container.add_child(p_y_spinbox)
 
-func add_vector2i_parameter(parameter: Render.Parameter) -> void:
+func add_vector2i_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
 	
 	var x_spinbox_settings := SpinboxSettings.new(-16384, 16384, 1.0, "x:")
@@ -144,7 +144,7 @@ func add_vector2i_parameter(parameter: Render.Parameter) -> void:
 	var p_y_spinbox := add_spinbox(y_value_changed_function, y_start_value, y_spinbox_settings)
 	settings_container.add_child(p_y_spinbox)
 
-func add_color_parameter(parameter: Render.Parameter) -> void:
+func add_color_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	add_parameter_label(parameter.name)
 	var p_color_picker_button := ColorPickerButton.new()
 	p_color_picker_button.color = parameter.get_value() as Color
@@ -166,7 +166,7 @@ func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> v
 	texture_file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 
 
-func _on_render_changed(_render_material: ShaderMaterial) -> void:
+func _on_shader_animation_changed(_shader_animation: ShaderAnimation) -> void:
 	update_shader_settings_UI()
 
 func _on_started_rendering() -> void:

@@ -8,9 +8,9 @@ signal camera_position_changed
 
 func _ready() -> void:
 	camera.zoom = get_max_zoom_out()
-	camera.position = Render.size / 2.0
+	camera.position = ShaderAnimationRenderer.size / 2.0
 	
-	Render.resized.connect(_on_render_resized)
+	ShaderAnimationRenderer.resized.connect(_on_render_resized)
 	camera.get_viewport().size_changed.connect(_on_size_changed)
 	change_zoom(camera.zoom)
 
@@ -81,7 +81,7 @@ func get_viewpos(pos: Vector2) -> Vector2:
 
 
 func get_max_zoom_out() -> Vector2:
-	var ratio := (Vector2(Render.size) * 1.5) / (camera.get_viewport_rect().size / camera.zoom)
+	var ratio := (Vector2(ShaderAnimationRenderer.size) * 1.5) / (camera.get_viewport_rect().size / camera.zoom)
 	var f = maxf(ratio.x, ratio.y)
 	return (camera.zoom / f).min(Vector2.ONE)
 

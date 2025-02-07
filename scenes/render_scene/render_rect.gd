@@ -1,7 +1,7 @@
 extends ColorRect
 
 func _ready() -> void:
-	Render.changed.connect(_on_render_material_changed)
+	ShaderAnimationRenderer.shader_animation_changed.connect(_on_shader_animation_changed)
 
-func _on_render_material_changed(mat: ShaderMaterial) -> void:
-	material = mat
+func _on_shader_animation_changed(shader_animation: ShaderAnimation) -> void:
+	material = shader_animation.shader_material

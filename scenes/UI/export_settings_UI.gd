@@ -16,8 +16,8 @@ func _ready() -> void:
 	
 
 	export_type_option_button.item_selected.connect(_on_export_type_selected)
-	Render.started_rendering.connect(_on_started_rendering)
-	Render.ended_rendering.connect(_on_ended_rendering)
+	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
+	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
 
 
 
