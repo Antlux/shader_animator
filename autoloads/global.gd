@@ -75,10 +75,6 @@ func export(captures: Array[Image]) -> void:
 	var extension := split_path[1]
 	
 	match export_settings.export_type:
-		#ExportSettings.ExportType.WEBP:
-			#export_webp(captures)
-		#ExportSettings.ExportType.GIF:
-			#export_gif(captures)
 		ExportSettings.ExportType.EXR: 
 			for idx in captures.size():
 				var capture := captures[idx]
@@ -97,55 +93,55 @@ func export(captures: Array[Image]) -> void:
 				var path := stem + ("-%s." % idx) + extension
 				var error : Error = capture.save_png(path)
 				assert(error == OK, "Could not save as %s" % extension)
-	
+		ExportSettings.ExportType.GIF:
+			var file := FileAccess.open(Global.export_settings.export_path, FileAccess.WRITE)
+			if file:
+				file.store_buffer(get_gif_buffer(captures))
+				file.close()
 
+func get_gif_buffer(captures: Array[Image]) -> PackedByteArray:
+	if not captures.size() > 0:
+		return []
 	
+	var width := captures[0].get_width()
+	var height := captures[0].get_height()
+	var delay := render_settings.duration / render_settings.frame_count
+	var array_buffer: Array[PackedByteArray] = []
+	for capture in captures:
+		capture.convert(Image.FORMAT_RGBA8)
+		array_buffer.append(capture.get_data())
+	return AnimationExporter.export_gif(width, height, delay, array_buffer)
 
-			
-			
-		#ExportSettings.ExportType.JPG:
-			#var split_path := Global.export_settings.export_path.rsplit(".", true, 1)
-			#var extension := split_path[0]
-			#var stem := split_path[1]
-			#for idx in captures.size():
-				#var capture := captures[idx]
-				#var path := stem + ("-%s." % idx) + extension
-				#var error := capture.save_jpg(path)
-				#assert(error == OK, "Could not save as jpg")
-		#ExportSettings.ExportType.PNG:
-			#for idx in captures.size():
-				#var capture := captures[idx]
-				#var error := capture.save_png(Global.export_settings.export_path + "-%s.png" % idx)
-				#assert(error == OK, "Could not save as png")
-		#
-		#_:
-			#match export_settings.export_type:
-				#ExportSettings.ExportType.EXR or ExportSettings.ExportType.JPG or ExportSettings.ExportType.PNG:
-			#pass
+
 
 func export_web(captures: Array[Image]) -> void:
-	var writer := ZIPPacker.new()
-	writer.open("user://export.zip")
 	var extension := (ExportSettings.ExportType.keys()[export_settings.export_type] as String).to_lower()
-	for i in captures.size():
-		var capture := captures[i]
-		
-		writer.start_file("export-%s.%s" % [i, extension])
-		
-		match export_settings.export_type:
-			ExportSettings.ExportType.EXR:
-				writer.write_file(capture.save_exr_to_buffer())
-			ExportSettings.ExportType.JPG:
-				writer.write_file(capture.save_jpg_to_buffer())
-			ExportSettings.ExportType.PNG:
-				writer.write_file(capture.save_png_to_buffer())
-		
-		writer.close_file()
-	writer.close()
-	var file := FileAccess.open("user://export.zip", FileAccess.READ)
-	JavaScriptBridge.download_buffer(file.get_buffer(file.get_length()), "export.zip", "zip")
-
-
+	var buffer := PackedByteArray()
+	match export_settings.export_type:
+		ExportSettings.ExportType.EXR or ExportSettings.ExportType.JPG or ExportSettings.ExportType.PNG:
+			var writer := ZIPPacker.new()
+			writer.open("user://export.zip")
+			for i in captures.size():
+				var capture := captures[i]
+				
+				writer.start_file("export-%s.%s" % [i, extension])
+				
+				match export_settings.export_type:
+					ExportSettings.ExportType.EXR:
+						writer.write_file(capture.save_exr_to_buffer())
+					ExportSettings.ExportType.JPG:
+						writer.write_file(capture.save_jpg_to_buffer())
+					ExportSettings.ExportType.PNG:
+						writer.write_file(capture.save_png_to_buffer())
+				
+				writer.close_file()
+			writer.close()
+			var file := FileAccess.open("user://export.zip", FileAccess.READ)
+			buffer = file.get_buffer(file.get_length())
+			JavaScriptBridge.download_buffer(buffer, "export.zip", "zip")
+		ExportSettings.ExportType.GIF:
+			JavaScriptBridge.download_buffer(get_gif_buffer(captures), "export.gif", "gif")
+	
 func _on_export_settings_changed() -> void:
 	export_settings.save()
 

@@ -7,4 +7,4 @@
 script = ExtResource("1_bc81g")
 shader_material = ExtResource("2_60f0b")
 name = "Font drip"
-parameters = {}
+parameters_dict = {}

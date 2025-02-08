@@ -47,7 +47,7 @@ func _on_resolution_y_changed(value: float) -> void:
 func _on_duration_changed(value: float) -> void:
 	Global.render_settings.duration = value
 
-func _on_frame_count_changed(value: float) -> void:
+func _on_frame_count_changed(value: int) -> void:
 	Global.render_settings.frame_count = value
 
 
