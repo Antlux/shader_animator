@@ -6,5 +6,5 @@ reloadable = true
 [libraries]
 windows.debug.x86_64 = "res://libraries/debug/gif_exporter.dll"
 windows.release.x86_64 = "res://libraries/release/gif_exporter.dll"
-web.debug.wasm32 = "res://libraries/debug/gif_exporter.wasm"
+web.debug.wasm32 = "res://libraries/target/gif_exporter.wasm"
 web.release.wasm32 = "res://libraries/target/gif_exporter.wasm"
