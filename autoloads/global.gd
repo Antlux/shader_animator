@@ -69,37 +69,45 @@ func apply_render_settings(settings: RenderSettings) -> void:
 	ShaderAnimationRenderer.frame_count = settings.frame_count
 
 
-func export(captures: Array[Image]) -> void:
-	var split_path := Global.export_settings.export_path.rsplit(".", true, 1) as PackedStringArray
-	var stem := split_path[0]
-	var extension := split_path[1]
+func export_zip(path: String, captures: Array[Image], export_type: ExportSettings.ExportTypes) -> Error:
+	var extension :=  ExportSettings.get_extension(export_settings.export_type)
+	var zip_packer := ZIPPacker.new()
 	
-	match export_settings.export_type:
-		ExportSettings.ExportType.EXR: 
-			for idx in captures.size():
-				var capture := captures[idx]
-				var path := stem + ("-%s." % idx) + extension
-				var error : Error = capture.save_exr(path)
-				assert(error == OK, "Could not save as %s" % extension)
-		ExportSettings.ExportType.JPG:
-			for idx in captures.size():
-				var capture := captures[idx]
-				var path := stem + ("-%s." % idx) + extension
-				var error : Error = capture.save_jpg(path)
-				assert(error == OK, "Could not save as %s" % extension)
-		ExportSettings.ExportType.PNG:
-			for idx in captures.size():
-				var capture := captures[idx]
-				var path := stem + ("-%s." % idx) + extension
-				var error : Error = capture.save_png(path)
-				assert(error == OK, "Could not save as %s" % extension)
-		ExportSettings.ExportType.GIF:
-			var file := FileAccess.open(Global.export_settings.export_path, FileAccess.WRITE)
-			if file:
-				file.store_buffer(get_gif_buffer(captures))
-				file.close()
+	var opening_error := zip_packer.open(path)
+	
+	if opening_error != OK:
+		return opening_error
+	
+	for idx in captures.size():
+		var capture := captures[idx]
+		var file_name := "export-%s.%s" % [idx, extension]
+		
+		var start_file_error := zip_packer.start_file(file_name)
+		if start_file_error != OK:
+			return start_file_error
+		
+		var write_file_error: Error
+		match export_type:
+			ExportSettings.ExportTypes.PNG:
+				write_file_error = zip_packer.write_file(capture.save_png_to_buffer())
+			ExportSettings.ExportTypes.JPG:
+				write_file_error = zip_packer.write_file(capture.save_jpg_to_buffer())
+			ExportSettings.ExportTypes.EXR:
+				write_file_error = zip_packer.write_file(capture.save_exr_to_buffer())
+		if write_file_error != OK:
+			return write_file_error
+		
+		var close_file_error := zip_packer.close_file()
+		if close_file_error != OK:
+			return close_file_error
+		
+	var close_error := zip_packer.close()
+	if close_error != OK:
+		return close_error
+	
+	return OK
 
-func get_gif_buffer(captures: Array[Image]) -> PackedByteArray:
+func generate_gif_buffer(captures: Array[Image]) -> PackedByteArray:
 	if not captures.size() > 0:
 		return []
 	
@@ -110,38 +118,53 @@ func get_gif_buffer(captures: Array[Image]) -> PackedByteArray:
 	for capture in captures:
 		capture.convert(Image.FORMAT_RGBA8)
 		array_buffer.append(capture.get_data())
-	return AnimationExporter.export_gif(width, height, delay, array_buffer)
+	return AnimationExporter.encode_gif(width, height, delay, array_buffer)
 
 
+
+func export(captures: Array[Image]) -> void:
+	var split_path := Global.export_settings.export_path.rsplit(".", true, 1) as PackedStringArray
+	var stem := split_path[0]
+	var extension := split_path[1]
+	
+	match export_settings.export_type:
+		ExportSettings.ExportTypes.EXR: 
+			for idx in captures.size():
+				var capture := captures[idx]
+				var path := stem + ("-%s." % idx) + extension
+				var error : Error = capture.save_exr(path)
+				assert(error == OK, "Could not save as %s" % extension)
+		ExportSettings.ExportTypes.JPG:
+			for idx in captures.size():
+				var capture := captures[idx]
+				var path := stem + ("-%s." % idx) + extension
+				var error : Error = capture.save_jpg(path)
+				assert(error == OK, "Could not save as %s" % extension)
+		ExportSettings.ExportTypes.PNG:
+			for idx in captures.size():
+				var capture := captures[idx]
+				var path := stem + ("-%s." % idx) + extension
+				var error : Error = capture.save_png(path)
+				assert(error == OK, "Could not save as %s" % extension)
+		ExportSettings.ExportTypes.GIF:
+			var file := FileAccess.open(Global.export_settings.export_path, FileAccess.WRITE)
+			if file:
+				file.store_buffer(generate_gif_buffer(captures))
+				file.close()
 
 func export_web(captures: Array[Image]) -> void:
-	var extension := (ExportSettings.ExportType.keys()[export_settings.export_type] as String).to_lower()
-	var buffer := PackedByteArray()
-	match export_settings.export_type:
-		ExportSettings.ExportType.EXR or ExportSettings.ExportType.JPG or ExportSettings.ExportType.PNG:
-			var writer := ZIPPacker.new()
-			writer.open("user://export.zip")
-			for i in captures.size():
-				var capture := captures[i]
-				
-				writer.start_file("export-%s.%s" % [i, extension])
-				
-				match export_settings.export_type:
-					ExportSettings.ExportType.EXR:
-						writer.write_file(capture.save_exr_to_buffer())
-					ExportSettings.ExportType.JPG:
-						writer.write_file(capture.save_jpg_to_buffer())
-					ExportSettings.ExportType.PNG:
-						writer.write_file(capture.save_png_to_buffer())
-				
-				writer.close_file()
-			writer.close()
-			var file := FileAccess.open("user://export.zip", FileAccess.READ)
-			buffer = file.get_buffer(file.get_length())
-			JavaScriptBridge.download_buffer(buffer, "export.zip", "zip")
-		ExportSettings.ExportType.GIF:
-			JavaScriptBridge.download_buffer(get_gif_buffer(captures), "export.gif", "gif")
+	var extension := ExportSettings.get_extension(export_settings.export_type)
 	
+	match export_settings.export_type:
+		ExportSettings.ExportTypes.GIF:
+			JavaScriptBridge.download_buffer(generate_gif_buffer(captures), "export.gif", "gif")
+		var export_type:
+			var export_error := export_zip("user://export.zip", captures, export_type)
+			if export_error != OK : printerr(error_string(export_error))
+			var zip_file := FileAccess.open("user://export.zip", FileAccess.READ)
+			var zip_buffer := zip_file.get_buffer(zip_file.get_length())
+			JavaScriptBridge.download_buffer(zip_buffer, "export.zip", "zip")
+
 func _on_export_settings_changed() -> void:
 	export_settings.save()
 

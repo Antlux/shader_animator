@@ -33,10 +33,10 @@ size = Vector2(0, 0)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nnubo"]
 size = Vector2(0, 0)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("export_button", "file_dialog")]
+[node name="Main" type="Node" node_paths=PackedStringArray("export_render_button", "export_render_file_dialog")]
 script = ExtResource("1_oq0dg")
-export_button = NodePath("UI/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/ExportButton")
-file_dialog = NodePath("FileDialog")
+export_render_button = NodePath("UI/MarginContainer/GridContainer/VBoxContainer/ExportSettings/MarginContainer/VBoxContainer/ExportButton")
+export_render_file_dialog = NodePath("ExportRenderFileDialog")
 
 [node name="RenderSubViewport" type="SubViewport" parent="."]
 transparent_bg = true
@@ -54,7 +54,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_7htye")
 
-[node name="FileDialog" type="FileDialog" parent="."]
+[node name="ExportRenderFileDialog" type="FileDialog" parent="."]
 initial_position = 1
 size = Vector2i(512, 512)
 ok_button_text = "Save"

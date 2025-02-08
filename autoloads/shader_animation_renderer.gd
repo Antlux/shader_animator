@@ -92,8 +92,6 @@ func render_frames() -> Array[Image]:
 		set_frame(f)
 		await get_tree().process_frame
 		await get_tree().process_frame
-		await get_tree().process_frame
-		await get_tree().process_frame
 		captures.append(render_viewport.get_texture().get_image())
 	
 	_rendering = false

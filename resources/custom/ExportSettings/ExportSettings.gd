@@ -2,14 +2,14 @@ class_name ExportSettings extends Resource
 
 const PATH := "user://export_settings.tres"
 
-enum ExportType {
+enum ExportTypes {
 	EXR,
 	JPG,
 	PNG,
 	GIF,
 }
 
-@export var export_type := ExportType.PNG: 
+@export var export_type := ExportTypes.PNG: 
 	set(value):
 		export_type = value
 		emit_changed()
@@ -17,6 +17,7 @@ enum ExportType {
 	set(value):
 		export_path = value
 		emit_changed()
+
 
 func save() -> void:
 	var error = ResourceSaver.save(self, PATH)
@@ -26,3 +27,6 @@ static func load_or_create() -> ExportSettings:
 	if ResourceLoader.exists(PATH, "ExportSettings"):
 		return ResourceLoader.load(PATH)
 	return ExportSettings.new()
+
+static func get_extension(export_type: ExportTypes) -> String:
+	return (ExportSettings.ExportTypes.keys()[export_type] as String).to_lower()

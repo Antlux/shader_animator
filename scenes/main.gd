@@ -1,33 +1,29 @@
 extends Node
 
-@export var export_button : Button
-@export var file_dialog: FileDialog
-
+@export var export_render_button : Button
+@export var export_render_file_dialog: FileDialog
 
 
 func _ready() -> void:
-	export_button.pressed.connect(_on_export_pressed)
-	file_dialog.file_selected.connect(_on_file_selected)
-	
+	export_render_button.pressed.connect(_on_export_render_pressed)
+	export_render_file_dialog.file_selected.connect(_on_export_render_file_selected)
 
 
-func _on_export_pressed() -> void:
-	file_dialog.current_dir = Global.export_settings.export_path
-	
+func setup_file_dialog() -> void:
+	var extension :=  ExportSettings.get_extension(Global.export_settings.export_type)
+	export_render_file_dialog.current_path = Global.export_settings.export_path.rsplit("/", true, 1)[0] + "/"
+	export_render_file_dialog.clear_filters()
+	export_render_file_dialog.add_filter("*." + extension, "animation")
+
+
+func _on_export_render_pressed() -> void:
 	if OS.has_feature("web"):
 		Global.export_web(await ShaderAnimationRenderer.render_frames())
 		return
 	
-	var extension := (ExportSettings.ExportType.keys()[Global.export_settings.export_type] as String).to_lower()
-	file_dialog.clear_filters()
-	file_dialog.add_filter("*." + extension, "animation")
-	file_dialog.show()
+	setup_file_dialog()
+	export_render_file_dialog.popup()
 
-
-
-func _on_file_selected(dir_path: String) -> void:
-
-	Global.export_settings.export_path = dir_path
-	
-
+func _on_export_render_file_selected(path: String) -> void:
+	Global.export_settings.export_path = path
 	Global.export(await ShaderAnimationRenderer.render_frames())
