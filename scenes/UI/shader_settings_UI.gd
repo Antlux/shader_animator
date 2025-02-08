@@ -49,10 +49,11 @@ func update_shader_settings_UI() -> void:
 				add_vector_parameter(parameter, 4, Vector4i(), spinbox_settings_i)
 			TYPE_COLOR:
 				add_color_parameter(parameter)
-			#TYPE_OBJECT:
-				#match p_hint[0]:
-					#"Texture2D":
-						#add_texture_parameter(render_material, p_name)
+			TYPE_OBJECT:
+				match parameter.hint[0]:
+					"Texture2D":
+						add_texture_parameter(parameter)
+					
 
 func add_parameter_label(p_name: String) -> void:
 	var p_label := Label.new()
@@ -141,12 +142,12 @@ func add_color_parameter(parameter: ShaderAnimation.Parameter) -> void:
 	p_color_picker_button.custom_minimum_size.y = 20.0
 	settings_container.add_child(p_color_picker_button)
 
-func add_texture_parameter(render_material: ShaderMaterial, p_name: String) -> void:
-	add_parameter_label(p_name)
+func add_texture_parameter(parameter: ShaderAnimation.Parameter) -> void:
+	add_parameter_label(parameter.name)
 	var p_texture_button := TextureButton.new()
 	p_texture_button.ignore_texture_size = true
 	p_texture_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	p_texture_button.texture_normal = render_material.get_shader_parameter(p_name)
+	p_texture_button.texture_normal = parameter.get_value()
 	p_texture_button.custom_minimum_size.y = 64.0
 	settings_container.add_child(p_texture_button)
 	

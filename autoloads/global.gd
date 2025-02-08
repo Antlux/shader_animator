@@ -19,6 +19,9 @@ func _ready() -> void:
 	shader_animation_list = load_shader_animations()
 	shader_animation_list_updated.emit()
 	
+	if shader_animation_list.is_empty():
+		reset_shader_animations()
+	
 	apply_render_settings(Global.render_settings)
 
 
