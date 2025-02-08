@@ -83,7 +83,7 @@ static func create(animation_name: String) -> ShaderAnimation:
 	new_animation.name = animation_name
 	new_animation.shader_material = ShaderMaterial.new()
 	new_animation.shader_material.shader = Shader.new()
-	new_animation.shader_material.shader.code = "shader_type canvas_item;\n\nuniform float outside_time = 0.0;"
+	new_animation.shader_material.shader.code = "shader_type canvas_item;\n\nuniform float outside_time = 0.0;\n\nvoid fragment(){\n	COLOR.rgb = vec3(outside_time);\n}"
 	return new_animation
 
 static func load_animation(path: String) -> ShaderAnimation:

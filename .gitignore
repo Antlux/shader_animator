@@ -2,7 +2,6 @@
 .godot/
 /android/
 .assets/
-gif-exporter/target/
-gif-exporter/Cargo.lock
+gif-exporter/
 *.tmp
 .exports/
