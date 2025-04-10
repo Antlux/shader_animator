@@ -61,7 +61,7 @@ func save() -> Error:
 			return mkdir_err
 	
 	var path := "user://shader_animations/%s.tres" % self.name.replace(" ", "_").to_lower().strip_edges()
-	print("saving %s -> %s" % [self.name, name])
+	print("saving %s -> %s" % [self.name, path])
 	var save_error := ResourceSaver.save(self, path)
 	if not save_error == OK:
 		assert(save_error == OK, "Could not save shader animation: %s" % save_error)

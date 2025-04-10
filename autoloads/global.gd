@@ -42,6 +42,15 @@ func add_shader_animation(animation_name: String) -> void:
 	if not animation_name.is_empty():
 		var new_animation := ShaderAnimation.create(animation_name)
 		shader_animation_list.append(new_animation)
+		new_animation.save()
+		shader_animation_list_updated.emit()
+
+func duplicate_shader_animation(shader_animation: ShaderAnimation, animation_name: String) -> void:
+	if not animation_name.is_empty():
+		var duplicate_animation : ShaderAnimation = shader_animation.duplicate(true)
+		duplicate_animation.name = animation_name
+		shader_animation_list.append(duplicate_animation)
+		duplicate_animation.save()
 		shader_animation_list_updated.emit()
 
 func remove_shader_animation(shader_animation: ShaderAnimation) -> void:

@@ -1,26 +1,24 @@
 extends OptionButton
 
 func _ready() -> void:
-	Global.shader_animation_list_updated.connect(_on_shader_animation_list_updated)
-	
-	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
-	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
-	
+	setup()
 	update_list()
-	
-	item_selected.connect(_on_item_selected)
-	
 	if Global.shader_animation_list.size() > 0:
 		select(0)
 		select_shader(0)
 
+
+func setup() -> void:
+	Global.shader_animation_list_updated.connect(_on_shader_animation_list_updated)
+	ShaderAnimationRenderer.started_rendering.connect(_on_started_rendering)
+	ShaderAnimationRenderer.ended_rendering.connect(_on_ended_rendering)
+	item_selected.connect(_on_item_selected)
 
 func update_list() -> void:	
 	clear()
 
 	for anim_idx in Global.shader_animation_list.size():
 		add_icon_item(Global.shader_animation_list[anim_idx].get_texture(Vector2i(64, 64)), Global.shader_animation_list[anim_idx].name)
-
 
 func select_shader(idx: int) -> void:
 	idx = clampi(idx, -1, Global.shader_animation_list.size() - 1)
@@ -45,8 +43,6 @@ func _on_shader_animation_list_updated() -> void:
 		idx = maxi(0, idx - 1)
 	else:
 		idx = maxi(-1, idx - 1)
-	
-	
 	
 	print(idx)
 	

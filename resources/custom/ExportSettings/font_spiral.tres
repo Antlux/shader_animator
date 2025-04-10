@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="ShaderFace" load_steps=3 format=3 uid="uid://71isyh7ocgh8"]
+[gd_resource type="Resource" script_class="ShaderAnimation" load_steps=3 format=3 uid="uid://71isyh7ocgh8"]
 
-[ext_resource type="Script" path="res://resources/custom/ShaderAnimation/shader_animation.gd" id="1_7q6ht"]
+[ext_resource type="Script" uid="uid://bea33gl7p6sck" path="res://resources/custom/ShaderAnimation/shader_animation.gd" id="1_7q6ht"]
 [ext_resource type="Material" uid="uid://puav3np8tmmb" path="res://resources/materials/shader_materials/canvas/font_spiral/font_spiral.tres" id="2_rst3t"]
 
 [resource]
 script = ExtResource("1_7q6ht")
 shader_material = ExtResource("2_rst3t")
 name = "Font spiral"
+parameters_dict = {}

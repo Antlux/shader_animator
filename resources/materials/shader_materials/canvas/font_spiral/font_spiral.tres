@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://puav3np8tmmb"]
 
-[ext_resource type="Shader" path="res://resources/materials/shader_materials/canvas/font_spiral/font_spiral.gdshader" id="1_31f5f"]
+[ext_resource type="Shader" uid="uid://dykmtrsc8pfjm" path="res://resources/materials/shader_materials/canvas/font_spiral/font_spiral.gdshader" id="1_31f5f"]
 [ext_resource type="Texture2D" uid="uid://12xgyrws2dc8" path="res://assets/font_atlases/atascii-(8w-8h)-(7H-49V).png" id="2_8bit1"]
 
 [resource]

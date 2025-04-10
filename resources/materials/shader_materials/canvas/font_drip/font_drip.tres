@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://b34swf4lg0js5"]
 
-[ext_resource type="Shader" path="res://resources/materials/shader_materials/canvas/font_drip/font_drip.gdshader" id="1_a2ihs"]
+[ext_resource type="Shader" uid="uid://cy1tnjoq33x41" path="res://resources/materials/shader_materials/canvas/font_drip/font_drip.gdshader" id="1_a2ihs"]
 [ext_resource type="Texture2D" uid="uid://dtet12fax0tr4" path="res://assets/font_atlases/QuinqueFive-(5w-6h)-(149H-2V).png" id="2_6kcou"]
 
 [resource]

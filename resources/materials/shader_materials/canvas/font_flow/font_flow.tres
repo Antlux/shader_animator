@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=7 format=3 uid="uid://bxxjmxuvx0bv1"]
 
-[ext_resource type="Shader" path="res://resources/materials/shader_materials/canvas/font_flow/font_flow.gdshader" id="1_y2sgd"]
+[ext_resource type="Shader" uid="uid://gt4ue4f8j5ot" path="res://resources/materials/shader_materials/canvas/font_flow/font_flow.gdshader" id="1_y2sgd"]
 [ext_resource type="Texture2D" uid="uid://12xgyrws2dc8" path="res://assets/font_atlases/atascii-(8w-8h)-(7H-49V).png" id="2_llwko"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_h85ws"]
