@@ -1,0 +1,15 @@
+[package]
+name = "gif-exporter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gif = "0.13.1"
+
+[dependencies.godot]
+git = "https://github.com/godot-rust/gdext.git" 
+branch = "master"
+features = ["experimental-wasm", "lazy-function-tables"]
+
+[lib]
+crate-type = ["cdylib", "staticlib"]

@@ -5,6 +5,7 @@ signal shader_animation_list_updated
 const FONT_DRIP: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/font_drip.tres")
 const FONT_FLOW: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/font_flow.tres")
 const FONT_SPIRAL: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/font_spiral.tres")
+const PIXEL_COLOR_BLOPS: ShaderAnimation = preload("res://resources/custom/ShaderAnimation/shader_animations/pixel_color_blops.tres")
 
 @onready var export_settings := ExportSettings.load_or_create()
 @onready var render_settings := RenderSettings.load_or_create()
@@ -62,7 +63,8 @@ func reset_shader_animations() -> void:
 	var list: Array[ShaderAnimation] = [
 		FONT_DRIP, 
 		FONT_FLOW, 
-		FONT_SPIRAL
+		FONT_SPIRAL,
+		PIXEL_COLOR_BLOPS
 	]
 	
 	for shader_animation in list:

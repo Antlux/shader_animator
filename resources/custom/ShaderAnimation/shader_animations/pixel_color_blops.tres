@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ShaderAnimation" load_steps=3 format=3 uid="uid://78apob45nqbe"]
+
+[ext_resource type="Script" uid="uid://bea33gl7p6sck" path="res://resources/custom/ShaderAnimation/shader_animation.gd" id="1_q257m"]
+[ext_resource type="Material" uid="uid://bf1isi45acprp" path="res://resources/materials/shader_materials/canvas/pixel_color_blops/pixel_color_blops.tres" id="2_q257m"]
+
+[resource]
+script = ExtResource("1_q257m")
+shader_material = ExtResource("2_q257m")
+name = "Pixel Color Blops"
+parameters_dict = {}
