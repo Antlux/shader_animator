@@ -63,15 +63,15 @@ func change_shader_animation(to: ShaderAnimation) -> void:
 	shader_animation_changed.emit(shader_animation)
 
 
-## Set the active render shader material time to the [param timestamp] parameter (in seconds) and emits [signal Render.updated].
+## Sets the active render shader material time to the [param timestamp] parameter (in seconds) and emits [signal Render.updated].
 func set_time(timestamp: float) -> void:
 	current_time = fmod(timestamp, duration)
 	current_frame = floori(current_time / duration * frame_count)
-	var timestamp_floored = floorf(current_time * frame_count) /  frame_count
+	var timestamp_floored = floorf(current_time * get_framerate()) / get_framerate()
 	shader_animation.shader_material.set_shader_parameter("outside_time", timestamp_floored)
 	updated.emit(timestamp_floored, current_frame)
 
-## Set the active render shader material frame index to the [param index] parameter (in seconds) and emits [signal Render.updated].
+## Sets the active render shader material frame index to the [param index] parameter (in seconds) and emits [signal Render.updated].
 func set_frame(index: int) -> void:
 	current_frame = index % frame_count
 	var frame_rate = get_framerate();
@@ -80,7 +80,7 @@ func set_frame(index: int) -> void:
 	updated.emit(current_time, current_frame)
 
 func get_framerate() -> float:
-	return duration / frame_count
+	return frame_count / duration
 
 func render_frames() -> Array[Image]:
 	var captures: Array[Image] = []

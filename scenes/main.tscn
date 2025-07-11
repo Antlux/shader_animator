@@ -363,13 +363,14 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 columns = 2
 
-[node name="RenderSettings" type="PanelContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_count_spin_box")]
+[node name="RenderSettings" type="PanelContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("resolution_x_spin_box", "resolution_y_spin_box", "duration_spinbox", "frame_count_spin_box", "frame_rate_info_label")]
 layout_mode = 2
 script = ExtResource("13_owcuf")
 resolution_x_spin_box = NodePath("MarginContainer/GridContainer/ResolutionXSpinBox")
 resolution_y_spin_box = NodePath("MarginContainer/GridContainer/ResolutionYSpinBox")
 duration_spinbox = NodePath("MarginContainer/GridContainer/DurationSpinBox")
 frame_count_spin_box = NodePath("MarginContainer/GridContainer/FrameCountSpinBox")
+frame_rate_info_label = NodePath("MarginContainer/GridContainer/FrameRateInfoLabel")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer/RenderSettings"]
 layout_mode = 2
@@ -438,6 +439,14 @@ size_flags_horizontal = 3
 theme_override_icons/updown = SubResource("PlaceholderTexture2D_j4k15")
 max_value = 9.22337e+18
 value = 12.0
+
+[node name="FrameRateLabel" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Frame rate:"
+horizontal_alignment = 2
+
+[node name="FrameRateInfoLabel" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/RenderSettings/MarginContainer/GridContainer"]
+layout_mode = 2
 
 [node name="ExportSettings" type="PanelContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer" node_paths=PackedStringArray("export_type_option_button", "export_button")]
 layout_mode = 2

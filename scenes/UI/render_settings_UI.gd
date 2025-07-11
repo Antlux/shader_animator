@@ -4,6 +4,7 @@ extends PanelContainer
 @export var resolution_y_spin_box: SpinBox
 @export var duration_spinbox: SpinBox
 @export var frame_count_spin_box: SpinBox
+@export var frame_rate_info_label: Label
 
 
 func _ready() -> void:
@@ -25,6 +26,7 @@ func update_values() -> void:
 	resolution_y_spin_box.set_value_no_signal(Global.render_settings.resolution.y)
 	duration_spinbox.set_value_no_signal(Global.render_settings.duration)
 	frame_count_spin_box.set_value_no_signal(Global.render_settings.frame_count)
+	frame_rate_info_label.text = "%s FPS" % ShaderAnimationRenderer.get_framerate()
 
 
 func _on_export_settings_changed() -> void:
