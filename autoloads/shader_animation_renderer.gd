@@ -75,7 +75,7 @@ func set_time(timestamp: float) -> void:
 func set_frame(index: int) -> void:
 	current_frame = index % frame_count
 	var frame_rate = get_framerate();
-	current_time = index * frame_rate
+	current_time = index / frame_rate
 	shader_animation.shader_material.set_shader_parameter("outside_time", current_time)
 	updated.emit(current_time, current_frame)
 
